@@ -168,6 +168,9 @@ export default function Home() {
           <h1 className="font-light text-4xl">Reroll.ing</h1>
           <br></br>
           <p>{`I bought this domain as a joke and I have to do something with it 🤡`}</p>
+          <p>
+            &mdash; <a className="hover:text-blue-500 underline underline-offset-4" href="https://github.com/aaanh"> @aaanh</a>
+          </p>
         </div>
         <div className="flex flex-wrap items-center justify-center">{rolls.map((roll: Roll, idx: number) => <RollSlot key={idx} roll={roll}></RollSlot>)}</div>
         <div className="my-4 flex flex-col items-center">
