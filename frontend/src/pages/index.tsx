@@ -44,7 +44,7 @@ const RollSlot = ({ roll }: { roll: Roll }) => {
     }
   };
 
-  return <div className={`text-center text-2xl m-2 rounded-lg h-36 w-36 flex items-center justify-center border-2 p-1`.concat(" ", mapRarityToFrameColor(roll.servant?.sv_rarity ?? 0))}>{roll.servant?.sv_name}</div>
+  return <div className={`text-center m-2 rounded-lg h-28 w-28 flex items-center justify-center border-2 p-1`.concat(" ", mapRarityToFrameColor(roll.servant?.sv_rarity ?? 0))}>{roll.servant?.sv_name}</div>
 }
 
 export default function Home() {
