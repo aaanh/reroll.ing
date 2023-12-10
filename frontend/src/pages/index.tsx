@@ -50,6 +50,7 @@ const RollSlot = ({ roll }: { roll: Roll }) => {
 export default function Home() {
   const [numOfRolls, setNumOfRolls] = useState(0);
   const [rolls, setRolls] = useState<Roll[]>([]);
+  const [numBatchRolls, setNumBatchRolls] = useState(0);
 
   const tmp_seeds: Servant[] = [
     {
@@ -145,6 +146,7 @@ export default function Home() {
 
   function handleRoll(numOfRolls: 1 | 11, pool: Servant[]) {
     setNumOfRolls((prevNumOfRolls) => (numOfRolls === 1 ? prevNumOfRolls + 1 : numOfRolls === 11 ? prevNumOfRolls + 11 : prevNumOfRolls));
+    setNumBatchRolls((prevNumBatchRolls) => (numOfRolls === 11 ? prevNumBatchRolls + 1 : prevNumBatchRolls))
 
     const cur_rolls: Roll[] = [];
     for (let i = 0; i < numOfRolls; i++) {
@@ -176,7 +178,7 @@ export default function Home() {
         <div className="my-4 flex flex-col items-center">
           <div className="text-center">
             <p><span className="font-bold">Total Rolls:</span> {numOfRolls}</p>
-            <p><span className="font-bold">Total Costs:</span> {numOfRolls * 3} <span className="text-pink-500">SQ</span> ~ {(numOfRolls * 3 * 71.70).toFixed(2)} <span className="text-green-500">¥</span> ~ {(numOfRolls * 3 * 71.70 / 145).toFixed(2)} <span className="text-green-500">US$</span></p>
+            <p><span className="font-bold">Total Costs:</span> {(numOfRolls - numBatchRolls) * 3} <span className="text-pink-500">SQ</span> ~ {((numOfRolls - numBatchRolls) * 3 * 71.70).toFixed(2)} <span className="text-green-500">¥</span> ~ {((numOfRolls - numBatchRolls) * 3 * 71.70 / 145).toFixed(2)} <span className="text-green-500">US$</span></p>
             <p className="opacity-50 font-mono">Assuming biggest SQ purchase in JP: 1 sq = 71.70 ¥, 1 US$ = 145 ¥</p>
           </div>
           <div>
