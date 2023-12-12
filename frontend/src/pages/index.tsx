@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Head from "next/head";
 import Link from "next/link";
 
@@ -15,6 +17,7 @@ type Servant = {
   sv_name: string
   sv_rarity: 5 | 4 | 3 | 2 | 1 | 0
   sv_class: ServantClass
+  sv_face?: string
 }
 
 type Roll = {
@@ -144,18 +147,34 @@ export default function Home() {
     },
   ]
 
-  function handleRoll(numOfRolls: 1 | 11, pool: Servant[]) {
-    setNumOfRolls((prevNumOfRolls) => (numOfRolls === 1 ? prevNumOfRolls + 1 : numOfRolls === 11 ? prevNumOfRolls + 11 : prevNumOfRolls));
+  async function handleRoll(numOfRolls: 1 | 11, pool: Servant[]) {
     setNumBatchRolls((prevNumBatchRolls) => (numOfRolls === 11 ? prevNumBatchRolls + 1 : prevNumBatchRolls))
 
-    const cur_rolls: Roll[] = [];
-    for (let i = 0; i < numOfRolls; i++) {
-      const ranIdx = Math.floor(Math.random() * pool.length)
-      const ranVal = pool[ranIdx]
-      cur_rolls.push({ servant: ranVal, order: i })
+    if (numOfRolls === 1) {
+      setNumOfRolls((prevNumOfRolls) => (numOfRolls === 1 ? prevNumOfRolls + 1 : prevNumOfRolls));
+      const sv = await fetch("http://localhost:8080/roll/single").then((res) => res.json());
+      console.log(sv.roll)
+      const roll: Roll = {
+        servant: {
+          sv_collectionId: sv.roll.collectionNo,
+          sv_name: sv.roll.name,
+          sv_class: sv.roll.className,
+          sv_rarity: sv.roll.rarity,
+          sv_face: sv.roll.face
+        }, order: numOfRolls
+      }
+      setRolls([roll]);
+      return;
     }
 
-    setRolls(cur_rolls);
+    // const cur_rolls: Roll[] = [];
+    // for (let i = 0; i < numOfRolls; i++) {
+    //   const ranIdx = Math.floor(Math.random() * pool.length)
+    //   const ranVal = pool[ranIdx]
+    //   cur_rolls.push({ servant: ranVal, order: i })
+    // }
+
+    // setRolls(cur_rolls);
   }
 
   return (
