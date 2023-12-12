@@ -26,7 +26,9 @@ type Servant struct {
 
 func doSingleRoll(c *gin.Context) {
 	roll := rand.Intn(100) + 1
-	c.JSON(http.StatusOK, `{ "roll":}`)
+	// create json object
+	body := map[string]int{"roll": roll}
+	c.JSON(http.StatusOK, body)
 }
 
 func main() {
