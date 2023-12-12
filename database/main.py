@@ -1,19 +1,19 @@
-import json
 import sqlite3
-from db_driver import init_sql
+import db_driver as dd
 import os
 
-if __name__ == "__main__":
-    servants = []
 
-    with open("./fgo-servants-basic.json", "r", encoding="utf-8") as sv_db:
-        data = json.load(sv_db)
-        servants = data
-
-    if os.stat("./sv_db.db").st_size == 0:
-        init_sql()
+def main():
+    dd.init_sql()
+    # dd.update_db(dd.load_json())
 
     con = sqlite3.connect("sv_db.db")
     cur = con.cursor()
 
-    cur.execute('SELECT * FROM servants').fetchall()
+    fetched = cur.execute('SELECT * FROM servants').fetchall()
+    for row in fetched:
+        print(row)
+
+
+if __name__ == "__main__":
+    main()
