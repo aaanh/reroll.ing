@@ -39,7 +39,11 @@ def fetch_new_data():
 
 def update_db(json_data):
     for i in range(len(json_data)):
-        cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face) VALUES (?, ?, ?, ?, ?)",
-                    (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['face']))
+        try:
+            cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face) VALUES (?, ?, ?, ?, ?)",
+                        (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['face']))
+        except sqlite3.IntegrityError:
+            print(
+                f"Servant already exists in database, skipping: {json_data[i]['collectionNo']} - \"{json_data[i]['name']}\"")
 
         con.commit()
