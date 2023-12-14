@@ -168,7 +168,6 @@ func main() {
 
 	// CORS
 	config := cors.Default()
-	// config.AllowOrigins = []string{"http://localhost:3000", "https://reroll.ing"}
 	router.Use(config)
 
 	router.GET("/roll/single", doSingleRoll(servants))
