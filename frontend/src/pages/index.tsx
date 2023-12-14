@@ -3,12 +3,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Head from "next/head";
-import Link from "next/link";
 
 import { Inter } from "next/font/google"
 import { useState } from "react";
 
 const inter = Inter({ subsets: ['latin'] })
+
+
 
 enum ServantClass {
   Saber, Lancer, Archer, Rider, Caster, Assassin, Berserker, Ruler, Avenger, MoonCancer, AlterEgo, Foreigner, Pretender, Beast, Shielder
@@ -26,7 +27,6 @@ type Roll = {
   servant: Servant | undefined
   order: number
 }
-
 
 
 
@@ -53,6 +53,11 @@ const RollSlot = ({ roll }: { roll: Roll }) => {
 }
 
 export default function Home() {
+  const SERVER_MODE = process.env.NEXT_PUBLIC_SERVER_MODE
+  const API_SERVER = SERVER_MODE == "release" ? process.env.NEXT_PUBLIC_PROD_API_SERVER : process.env.NEXT_PUBLIC_DEV_API_SERVER
+
+  console.log(API_SERVER)
+
   const [numOfRolls, setNumOfRolls] = useState(0);
   const [rolls, setRolls] = useState<Roll[]>([]);
   const [numBatchRolls, setNumBatchRolls] = useState(0);
@@ -66,8 +71,8 @@ export default function Home() {
       setNumOfRolls((prevNumOfRolls) => prevNumOfRolls + 1);
 
       // Calling the API server for a single roll
-      const sv = await fetch("http://localhost:8080/roll/single").then((res) => res.json());
-      console.log(sv.roll)
+      const sv = await fetch(`${API_SERVER}/roll/single`).then((res) => res.json());
+
       const roll: Roll = {
         servant: {
           sv_collectionId: sv.roll.collectionNo,
@@ -79,7 +84,7 @@ export default function Home() {
       }
       setRolls([roll]);
       setRollHistory((prev) => [...prev, roll]);
-      console.log(rollHistory);
+
       return;
     }
 
@@ -87,7 +92,7 @@ export default function Home() {
       setNumOfRolls((prevNumOfRolls) => prevNumOfRolls + 11);
       setNumBatchRolls((prevNumBatchRolls) => prevNumBatchRolls + 1)
 
-      const res = await fetch("http://localhost:8080/roll/multi").then((res) => res.json());
+      const res = await fetch(`${API_SERVER}/roll/multi`).then((res) => res.json());
 
       setRolls([])
 
@@ -101,7 +106,7 @@ export default function Home() {
         }, order: idx
       }]))
 
-      console.log(rolls)
+
       return;
     }
   }
