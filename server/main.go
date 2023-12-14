@@ -167,9 +167,9 @@ func main() {
 	router := gin.Default()
 
 	// CORS
-	config := cors.DefaultConfig()
+	config := cors.Default()
 	// config.AllowOrigins = []string{"http://localhost:3000", "https://reroll.ing"}
-	router.Use(cors.New(config))
+	router.Use(config)
 
 	router.GET("/roll/single", doSingleRoll(servants))
 	router.GET("/roll/multi", doMultiRoll(servants))
