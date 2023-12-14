@@ -24,14 +24,113 @@ type Servant struct {
 	Face         string `json:"face"`
 }
 
-// func getServant(c *gin.Context) {
-// 	rarity := c.Query("rarity")
-// }
-
 func doSingleRoll(servants []Servant) gin.HandlerFunc {
 	fn := func(c *gin.Context) {
-		roll := rand.Intn(400) + 1
-		body := map[string]Servant{"roll": servants[roll]}
+		roll := rand.Intn(100) + 1
+
+		if roll == 1 {
+			var filtered []Servant
+
+			for _, sv := range servants {
+				if sv.Rarity == 5 {
+					filtered = append(filtered, sv)
+				}
+			}
+
+			local_roll := rand.Intn(len(filtered))
+			body := map[string]Servant{"roll": filtered[local_roll]}
+			c.JSON(http.StatusOK, body)
+		} else if roll > 1 && roll <= 4 {
+			var filtered []Servant
+
+			for _, sv := range servants {
+				if sv.Rarity == 4 {
+					filtered = append(filtered, sv)
+				}
+			}
+
+			local_roll := rand.Intn(len(filtered))
+			body := map[string]Servant{"roll": filtered[local_roll]}
+			c.JSON(http.StatusOK, body)
+		} else {
+			var filtered []Servant
+
+			for _, sv := range servants {
+				if sv.Rarity <= 3 {
+					filtered = append(filtered, sv)
+				}
+			}
+
+			local_roll := rand.Intn(len(filtered))
+			body := map[string]Servant{"roll": filtered[local_roll]}
+			c.JSON(http.StatusOK, body)
+		}
+	}
+
+	return gin.HandlerFunc(fn)
+}
+
+func doMultiRoll(servants []Servant) gin.HandlerFunc {
+	var guaranteed []Servant
+	var others []Servant
+
+	for _, sv := range servants {
+		if sv.Rarity >= 4 {
+			guaranteed = append(guaranteed, sv)
+		} else {
+			others = append(others, sv)
+		}
+	}
+
+	fn := func(c *gin.Context) {
+		var results []Servant
+		for i := 0; i < 11; i++ {
+			if i == 0 {
+				local_roll := rand.Intn(len(guaranteed))
+				results = append(results, guaranteed[local_roll])
+			} else {
+				roll := rand.Intn(100) + 1
+
+				if roll == 1 {
+					var filtered []Servant
+
+					for _, sv := range servants {
+						if sv.Rarity == 5 {
+							filtered = append(filtered, sv)
+						}
+					}
+
+					local_roll := rand.Intn(len(filtered))
+					results = append(results, filtered[local_roll])
+				} else if roll > 1 && roll <= 4 {
+					var filtered []Servant
+
+					for _, sv := range servants {
+						if sv.Rarity == 4 {
+							filtered = append(filtered, sv)
+						}
+					}
+
+					local_roll := rand.Intn(len(filtered))
+					results = append(results, filtered[local_roll])
+
+				} else {
+					var filtered []Servant
+
+					for _, sv := range servants {
+						if sv.Rarity <= 3 {
+							filtered = append(filtered, sv)
+						}
+					}
+
+					local_roll := rand.Intn(len(filtered))
+					results = append(results, filtered[local_roll])
+
+				}
+			}
+		}
+
+		body := map[string][]Servant{"rolls": results}
 		c.JSON(http.StatusOK, body)
 	}
 
@@ -60,6 +159,7 @@ func main() {
 	router.Use(cors.New(config))
 
 	router.GET("/roll/single", doSingleRoll(servants))
+	router.GET("/roll/multi", doMultiRoll(servants))
 
 	router.Run(":8080")
 }

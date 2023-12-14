@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Head from "next/head";
 import Link from "next/link";
 
@@ -15,6 +19,7 @@ type Servant = {
   sv_name: string
   sv_rarity: 5 | 4 | 3 | 2 | 1 | 0
   sv_class: ServantClass
+  sv_face?: string
 }
 
 type Roll = {
@@ -44,118 +49,61 @@ const RollSlot = ({ roll }: { roll: Roll }) => {
     }
   };
 
-  return <div className={`text-center m-2 rounded-lg h-28 w-28 flex items-center justify-center border-2 p-1`.concat(" ", mapRarityToFrameColor(roll.servant?.sv_rarity ?? 0))}>{roll.servant?.sv_name}</div>
+  return <div className={`text-center m-2 rounded-lg h-32 w-32 flex items-center justify-center border-2 p-1`.concat(" ", mapRarityToFrameColor(roll.servant?.sv_rarity ?? 0))}>{roll.servant?.sv_name}</div>
 }
 
 export default function Home() {
   const [numOfRolls, setNumOfRolls] = useState(0);
   const [rolls, setRolls] = useState<Roll[]>([]);
   const [numBatchRolls, setNumBatchRolls] = useState(0);
+  const [rollHistory, setRollHistory] = useState<Roll[]>([]);
 
-  const tmp_seeds: Servant[] = [
-    {
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 5
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 4
+  async function handleRoll(numOfRolls: 1 | 11) {
 
 
-    },
-    {
+    if (numOfRolls === 1) {
+      // Update the total number of rolls of the current session
+      setNumOfRolls((prevNumOfRolls) => prevNumOfRolls + 1);
 
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 3
-
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 2
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 1
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 0
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 5
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 5
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 5
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 5
-
-    },
-    {
-
-      sv_collectionId: 2,
-      sv_name: "Artoria Pendragon",
-      sv_class: ServantClass.Saber,
-      sv_rarity: 5
-
-    },
-  ]
-
-  function handleRoll(numOfRolls: 1 | 11, pool: Servant[]) {
-    setNumOfRolls((prevNumOfRolls) => (numOfRolls === 1 ? prevNumOfRolls + 1 : numOfRolls === 11 ? prevNumOfRolls + 11 : prevNumOfRolls));
-    setNumBatchRolls((prevNumBatchRolls) => (numOfRolls === 11 ? prevNumBatchRolls + 1 : prevNumBatchRolls))
-
-    const cur_rolls: Roll[] = [];
-    for (let i = 0; i < numOfRolls; i++) {
-      const ranIdx = Math.floor(Math.random() * pool.length)
-      const ranVal = pool[ranIdx]
-      cur_rolls.push({ servant: ranVal, order: i })
+      // Calling the API server for a single roll
+      const sv = await fetch("http://localhost:8080/roll/single").then((res) => res.json());
+      console.log(sv.roll)
+      const roll: Roll = {
+        servant: {
+          sv_collectionId: sv.roll.collectionNo,
+          sv_name: sv.roll.name,
+          sv_class: sv.roll.className,
+          sv_rarity: sv.roll.rarity,
+          sv_face: sv.roll.face
+        }, order: numOfRolls
+      }
+      setRolls([roll]);
+      setRollHistory((prev) => [...prev, roll]);
+      console.log(rollHistory);
+      return;
     }
 
-    setRolls(cur_rolls);
+    if (numOfRolls === 11) {
+      setNumOfRolls((prevNumOfRolls) => prevNumOfRolls + 11);
+      setNumBatchRolls((prevNumBatchRolls) => prevNumBatchRolls + 1)
+
+      const res = await fetch("http://localhost:8080/roll/multi").then((res) => res.json());
+
+      setRolls([])
+
+      res.rolls.map((sv: any, idx: number) => setRolls(prevRolls => [...prevRolls, {
+        servant: {
+          sv_collectionId: sv.collectionNo,
+          sv_name: sv.name,
+          sv_class: sv.className,
+          sv_rarity: sv.rarity,
+          sv_face: sv.face
+        }, order: idx
+      }]))
+
+      console.log(rolls)
+      return;
+    }
   }
 
   return (
@@ -182,8 +130,8 @@ export default function Home() {
             <p className="opacity-50 font-mono">Assuming biggest SQ purchase in JP: 1 sq = 71.70 ¥, 1 US$ = 145 ¥</p>
           </div>
           <div>
-            <button onClick={() => handleRoll(1, tmp_seeds)} className="btn-primary text-2xl">Roll x1</button>
-            <button onClick={() => handleRoll(11, tmp_seeds)} className="btn-primary text-2xl">Roll x11</button>
+            <button id="single-roll" onClick={() => handleRoll(1)} className="btn-primary text-2xl">Roll x1</button>
+            <button id="multi-roll" onClick={() => handleRoll(11)} className="btn-primary text-2xl">Roll x11</button>
           </div>
         </div>
       </main>
