@@ -4,8 +4,8 @@ import os
 
 
 def main():
-    dd.init_sql()
-    dd.update_db(dd.load_json())
+    # dd.init_sql()
+    # dd.update_db(dd.load_json())
 
     con = sqlite3.connect("sv_db.db")
     cur = con.cursor()
