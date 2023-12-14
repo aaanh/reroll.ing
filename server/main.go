@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gofor-little/env"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -138,7 +139,19 @@ func doMultiRoll(servants []Servant) gin.HandlerFunc {
 }
 
 func main() {
-	db, _ := sql.Open("sqlite3", "../database/sv_db.db")
+	env.Load("./.env")
+
+	SERVER_MODE := env.Get("SERVER_MODE", "debug")
+	DATABASE_PATH := env.Get("DATABASE_PATH", "../database/sv_db.db")
+
+	if SERVER_MODE == "release" {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		DATABASE_PATH = "../database/sv_db.db"
+		gin.SetMode(gin.DebugMode)
+	}
+
+	db, _ := sql.Open("sqlite3", DATABASE_PATH)
 	defer db.Close()
 	rows, _ := db.Query("SELECT * FROM servants")
 	defer rows.Close()
@@ -155,7 +168,7 @@ func main() {
 
 	// CORS
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowOrigins = []string{"http://localhost:3000", "https://reroll.ing"}
 	router.Use(cors.New(config))
 
 	router.GET("/roll/single", doSingleRoll(servants))
