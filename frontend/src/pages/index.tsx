@@ -115,6 +115,8 @@ export default function Home() {
         <title>Reroll.ing</title>
         <meta name="description" content="I bought this domain as a joke." />
         <link rel="icon" href="/logo-color-variant.png" />
+        <meta property="og:image" content="/logo-color-variant.png"></meta>
+        <meta property="og:url" content="https://reroll.ing" />
       </Head>
       <main className={`min-h-screen w-full bg-slate-900 justify-between items-center text-slate-200 flex ${inter.className} flex-col`}>
         <div className="my-4 text-center">
