@@ -56,8 +56,6 @@ export default function Home() {
   const SERVER_MODE = process.env.NEXT_PUBLIC_SERVER_MODE
   const API_SERVER = SERVER_MODE == "release" ? process.env.NEXT_PUBLIC_PROD_API_SERVER : process.env.NEXT_PUBLIC_DEV_API_SERVER
 
-  console.log(API_SERVER)
-
   const [numOfRolls, setNumOfRolls] = useState(0);
   const [rolls, setRolls] = useState<Roll[]>([]);
   const [numBatchRolls, setNumBatchRolls] = useState(0);
