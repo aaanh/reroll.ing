@@ -1,4 +1,4 @@
-# Reroll.ing
+# [Reroll.ing](https://reroll.ing)
 
 > I bought the domain as a joke and now feel compelled to do something with it.
 
@@ -7,12 +7,14 @@ So I build a full-stack FGO roll simulator.
 ## Features
 
 - [x] Single roll
-  - Partially implemented with Servants-only and all rarities have equal rate.
-- [ ] Multi roll
-  - Not implemented
+- [x] Multi roll
 - [ ] Servants card face
 - [ ] Servants class border
 - [x] Servants rarity border
+
+## Frontend/UI
+
+Just a simple Nextjs application bootstrapped via `create-t3-app`.
 
 ## Database
 
@@ -61,3 +63,94 @@ def update_db(json_data):
 
         con.commit()
 ```
+
+## API Server
+
+Everything here is written in Golang.
+
+I use Gin as the server which will handle the API routing.
+
+There are simply 2 routes for 2 roll scenarios:
+
+- `/roll/single`
+- `/roll/multi`
+
+### Initialization
+
+On pre-connection, we read and set the environment variables from `.env`.
+
+On setup, the server will initialize a connection with the SQLite database. This is simply a static file read which looks for a `sv_db.db` generated from the Python package above.
+
+After the SQL database "connection" is established, we do a `SELECT * FROM servants` 🤡 and store the query results in a runtime variable, a `[]Servant` slice. Then, we simply mutate and access the retrieved dataset as needed by each roll scenario.
+
+The server uses default CORS config defined in the `cors` package and listens on `localhost:8080`.
+
+### Roll Logic
+
+#### Single roll
+
+Takes the servants slice from as its parameter.
+
+Roll an integer from 1 to 100
+
+- Roll a `[1,1]`
+  1. Filter SSR from the servants slice (by matching rarity) -> `filtered []Servant` slice
+  2. Roll a number [0, len(filtered)] -> `local_roll`
+  3. Append `filtered[local_roll]` to the response body
+- Roll a `[2,4]`
+  - Same idea
+- Roll a `[5, 100]`
+  - Same idea
+
+#### Multi roll
+
+I expected the implementation for multi roll would be difficult, but it turned out to be more cumbersome than hard.
+
+First, I create a `guaranteed []Servant` slice as the pool containing only SSR and SR servants.
+
+For multi roll, 1 out of the 11 rolls is a guaranteed rarity 4 or above servant.
+
+To handle this case, I simply put it in a loop and add a condition for the first iteration.
+
+Then, I proceeded with the rest of the cases similarly to the single roll.
+
+Now looking back, I also put the 3\* and below servants in their own slice as well, but I don't really need it for the implementation. BUT then I'm too lazy to remove it so... whatever. Probably speed it up by 0.01% (I pulled that number out of thin air, don't quote me on that).
+
+## Deployment
+
+- Frontend -> Vercel
+- Database + Server -> baremetal Linux VPS
+
+To deploy, the following steps I took were:
+
+Get the API server running and listening on `localhost:8080`
+
+1. Create a VPS for `$5` a month
+2. `ssh` into it
+3. Install `go`, `build-essential`, `tmux`, and `git`
+4. Clone the repo
+5. Add the environment variables
+6. Build the executable binary with `go build`
+7. Start `tmux`
+8. Run the server `./server`
+
+Networking
+
+1. Add the server's static IP to DNS A record on Cloudflare
+2. Install `nginx`, `certbot`, `python3-certbot-nginx`
+3. Configure `nginx`'s site configuration
+
+   ```nginx
+    server {
+      server_name _;  // catch all
+
+      location / {
+        proxy_pass http://localhost:8080
+      }
+    }
+   ```
+
+4. Start `nginx` service: `systemctl enable --now nginx`
+5. Obtain SSL cert: `certbot --nginx -d api.example.com`
+
+> If you're lucky, it'll work on the first try 🥲
