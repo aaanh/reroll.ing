@@ -1,8 +1,15 @@
 # [Reroll.ing](https://reroll.ing)
 
+
 > I bought the domain as a joke and now feel compelled to do something with it.
 
 So... I built this full-stack FGO gacha simulator in, what is to me, a record time of 5 days (to be verified with commit history 🤡).
+
+## Notice
+
+I do not own the characters, names, and attributes that might appear during the usage of this software. Those are the intellectual properties of their respective copyright holders.
+
+I, however, hold copyright for the source code and my trade names.
 
 ## Features
 
