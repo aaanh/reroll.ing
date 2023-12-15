@@ -124,10 +124,10 @@ export default function Home() {
           <br></br>
           <p>{`I bought this domain as a joke and I have to do something with it 🤡`}</p>
           <p>
-            &mdash; <a className="hover:text-blue-500 underline underline-offset-4" href="https://github.com/aaanh"> @aaanh</a>
+            &mdash; <a className="hover:text-blue-500 underline underline-offset-4" href="https://github.com/aaanh">@aaanh</a> | <a className="hover:text-blue-500 underline underline-offset-4" href="https://github.com/aaanh/reroll.ing">source repo</a> | <a className="hover:text-blue-500 underline underline-offset-4" href="https://aaanh.com">homepage</a>
           </p>
         </div>
-        <div className="flex flex-wrap items-center justify-center">{rolls.map((roll: Roll, idx: number) => <RollSlot key={idx} roll={roll}></RollSlot>)}</div>
+        <div className="flex flex-wrap items-center justify-center h-[55vh] sm:border-none border-y border-blue-500 sm:shadow-none shadow-[inset_0_-5px_20px_rgba(0,0,0,0.3)] sm:overflow-hidden overflow-scroll no-scrollbar">{rolls.map((roll: Roll, idx: number) => <RollSlot key={idx} roll={roll}></RollSlot>)}</div>
         <div className="my-4 flex flex-col items-center">
           <div className="text-center">
             <p><span className="font-bold">Total Rolls:</span> {numOfRolls}</p>
