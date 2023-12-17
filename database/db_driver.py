@@ -38,6 +38,8 @@ def fetch_new_data():
 
 
 def fetch_and_store_sv_faces(sql_data):
+    start = perf_counter()
+
     for row in sql_data:
         url = f"{row[4]}"
         r = requests.get(url)
@@ -45,12 +47,38 @@ def fetch_and_store_sv_faces(sql_data):
             f.write(r.content)
         print(f"Stored face for ({row[0]}) {row[1]} - {len(r.content)}")
 
+    end = perf_counter()
+
+    print(f"Downloaded {len(sql_data)} faces in {end - start} seconds")
+
+
+def download_sv_faces():
+    if os.path.exists("./sv_faces.zip"):
+        print("sv_faces.zip already exists, skipping download")
+    else:
+        asset_url = requests.get(
+            "https://api.github.com/repos/aaanh/reroll.ing/releases").json()[0]['assets'][0]["browser_download_url"]
+        # print(asset_url)
+        r = requests.get(asset_url)
+        with open("./sv_faces.zip", "wb") as f:
+            f.write(r.content)
+        print(f"Downloaded sv_faces.zip, size: {len(r.content)}")
+
+    if os.path.exists("./assets"):
+        print("assets folder already exists, skipping unzip")
+    else:
+        # unzip downloaded file
+        os.system("unzip ./sv_faces.zip -d .")
+
 
 def update_db(json_data):
+    current_path = os.getcwd()
     for i in range(len(json_data)):
         try:
+            face_path = os.path.join(
+                current_path, "assets", f"{json_data[i]['collectionNo']}.png")
             cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face) VALUES (?, ?, ?, ?, ?)",
-                        (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['face']))
+                        (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], face_path))
         except sqlite3.IntegrityError:
             print(
                 f"Servant already exists in database, skipping: {json_data[i]['collectionNo']} - \"{json_data[i]['name']}\"")

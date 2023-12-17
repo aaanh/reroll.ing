@@ -73,14 +73,15 @@ func doSingleRoll(servants []Servant) gin.HandlerFunc {
 
 func doMultiRoll(servants []Servant) gin.HandlerFunc {
 	var guaranteed []Servant
-	var others []Servant
+	// var others []Servant
 
 	for _, sv := range servants {
 		if sv.Rarity >= 4 {
 			guaranteed = append(guaranteed, sv)
-		} else {
-			others = append(others, sv)
 		}
+		// } else {
+		// 	others = append(others, sv)
+		// }
 	}
 
 	fn := func(c *gin.Context) {

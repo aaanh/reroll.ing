@@ -19,13 +19,12 @@ def main():
         dd.fetch_and_store_sv_faces(cur.execute(
             'SELECT * FROM servants').fetchall())
 
+    if len(args) == 1 and args[0] == "download-faces":
+        dd.download_sv_faces()
+
     if os.stat("./sv_db.db").st_size == 0:
         dd.init_sql()
         dd.update_db(dd.load_json())
-
-    fetched = cur.execute('SELECT * FROM servants').fetchall()
-    for row in fetched:
-        print(row)
 
 
 if __name__ == "__main__":
