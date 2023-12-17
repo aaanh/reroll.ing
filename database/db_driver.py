@@ -2,7 +2,7 @@ import sqlite3
 from sqlite3 import OperationalError
 import json
 import os
-
+from time import perf_counter
 import requests
 
 con = sqlite3.connect("sv_db.db")
@@ -32,9 +32,18 @@ def load_json():
 def fetch_new_data():
     url = "https://api.atlasacademy.io/export/JP/basic_servant_lang_en.json"
     r = requests.get(url)
-    data = r.json()
+    json_data = r.json()
 
-    return data
+    return json_data
+
+
+def fetch_and_store_sv_faces(sql_data):
+    for row in sql_data:
+        url = f"{row[4]}"
+        r = requests.get(url)
+        with open(f"./assets/{row[0]}.png", "wb") as f:
+            f.write(r.content)
+        print(f"Stored face for ({row[0]}) {row[1]} - {len(r.content)}")
 
 
 def update_db(json_data):
