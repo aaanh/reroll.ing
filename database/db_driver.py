@@ -75,8 +75,7 @@ def update_db(json_data):
     current_path = os.getcwd()
     for i in range(len(json_data)):
         try:
-            face_path = os.path.join(
-                "/var/www/reroll.ing", "assets", f"{json_data[i]['collectionNo']}.png")
+            face_path = f"https://api.reroll.ing/assets/{json_data[i]['collectionNo']}.png"
             cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face) VALUES (?, ?, ?, ?, ?)",
                         (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], face_path))
         except sqlite3.IntegrityError:
