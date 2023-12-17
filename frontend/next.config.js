@@ -16,6 +16,20 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [
+      // {
+      //   protocol: 'https',
+      //   hostname: 'static.atlasacademy.io',
+      //   port: '',
+      // },
+      {
+        protocol: "https",
+        hostname: "api.reroll.ing",
+        port: "",
+      },
+    ],
+  },
 };
 
 export default config;
