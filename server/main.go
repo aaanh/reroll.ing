@@ -73,15 +73,11 @@ func doSingleRoll(servants []Servant) gin.HandlerFunc {
 
 func doMultiRoll(servants []Servant) gin.HandlerFunc {
 	var guaranteed []Servant
-	// var others []Servant
 
 	for _, sv := range servants {
 		if sv.Rarity >= 4 {
 			guaranteed = append(guaranteed, sv)
 		}
-		// } else {
-		// 	others = append(others, sv)
-		// }
 	}
 
 	fn := func(c *gin.Context) {
@@ -152,6 +148,7 @@ func main() {
 		gin.SetMode(gin.DebugMode)
 	}
 
+	// Connect to database
 	db, _ := sql.Open("sqlite3", DATABASE_PATH)
 	defer db.Close()
 	rows, _ := db.Query("SELECT * FROM servants")
@@ -165,12 +162,14 @@ func main() {
 		servants = append(servants, servant)
 	}
 
+	// Create router
 	router := gin.Default()
 
 	// CORS
 	config := cors.Default()
 	router.Use(config)
 
+	// Routes
 	router.GET("/roll/single", doSingleRoll(servants))
 	router.GET("/roll/multi", doMultiRoll(servants))
 
