@@ -14,16 +14,19 @@ I, however, hold copyright for the source code and my trade names.
 
 - [x] Func: Single roll
 - [x] Func: Multi roll
-- [ ] FE: Servants card face
-
-- [ ] FE: Servants class indicator
-- [x] FE: Servants rarity border
+- [x] FE: Servants card face
+- [ ] FE: Servants class indicators
+  - [x] Text only
+  - [ ] Symbol
+- [x] FE: Servants rarity indicators
+  - [x] Text only
+  - [ ] Symbol
 - [ ] FE: Staggered render
 - [ ] DB: Scheduled data update task
-- [ ] DB: Servant images
+- [x] DB: Servant images
   - [x] Image retrieval
+  - [x] Store to image database
   - [ ] Caching
-  - [ ] Store to image database
 - [ ] SV: API rate limiting
 
 ## Frontend/UI
