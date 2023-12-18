@@ -8,8 +8,11 @@ import { useState } from "react";
 import { type Roll } from "~/types";
 import RollSlot from "~/components/RollSlot";
 import Header from "~/components/Header";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ['latin'] })
+
+
 
 export default function Home() {
   const SERVER_MODE = process.env.NEXT_PUBLIC_SERVER_MODE
@@ -66,6 +69,7 @@ export default function Home() {
 
   return (
     <>
+      <SpeedInsights />
       <Head>
         <title>Reroll.ing</title>
         <meta name="description" content="I bought this domain as a joke." />
