@@ -171,3 +171,17 @@ Networking
 5. Obtain SSL cert: `certbot --nginx -d api.example.com`
 
 > If you're lucky, it'll work on the first try 🥲
+
+## Pretty Diagrams
+
+### System Architecture
+
+![system-architecture](./docs/system-architecture-diagram.png)
+
+### Sequence
+
+![sequence](./docs/sequence-diagram.png)
+
+### CI/CD & DevOps
+
+![ci/cd](./docs/devops-diagram.png)
