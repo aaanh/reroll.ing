@@ -25,7 +25,7 @@ type Servant struct {
 	Face         string `json:"face"`
 }
 
-func doSingleRoll(servants []Servant) gin.HandlerFunc {
+func DoSingleRoll(servants []Servant) gin.HandlerFunc {
 	fn := func(c *gin.Context) {
 		roll := rand.Intn(100) + 1
 
@@ -71,7 +71,7 @@ func doSingleRoll(servants []Servant) gin.HandlerFunc {
 	return gin.HandlerFunc(fn)
 }
 
-func doMultiRoll(servants []Servant) gin.HandlerFunc {
+func DoMultiRoll(servants []Servant) gin.HandlerFunc {
 	var guaranteed []Servant
 
 	for _, sv := range servants {
@@ -135,6 +135,40 @@ func doMultiRoll(servants []Servant) gin.HandlerFunc {
 	return gin.HandlerFunc(fn)
 }
 
+func GetServantByCollectionNo(db *sql.DB) gin.HandlerFunc {
+	var sv Servant
+
+	fn := func(c *gin.Context) {
+		collectionNo := c.Param("collectionNo")
+		res, err := db.Query("SELECT * FROM servants WHERE collectionNo = ?", collectionNo)
+
+		// Handle query error
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+			return
+		}
+
+		defer res.Close()
+
+		if res.Next() {
+			if err := res.Scan(&sv.CollectionNo, &sv.Name, &sv.Rarity, &sv.ClassName, &sv.Face); err != nil {
+				// Handle the error
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+				return
+			}
+		} else {
+			// Handle the case where no row was found
+			c.JSON(http.StatusNotFound, gin.H{"error": "Servant not found"})
+			return
+		}
+
+		body := map[string]Servant{"servant": sv}
+		c.JSON(http.StatusOK, body)
+	}
+
+	return gin.HandlerFunc(fn)
+}
+
 func main() {
 	env.Load("./.env")
 
@@ -170,8 +204,10 @@ func main() {
 	router.Use(config)
 
 	// Routes
-	router.GET("/roll/single", doSingleRoll(servants))
-	router.GET("/roll/multi", doMultiRoll(servants))
+	router.GET("/roll/single", DoSingleRoll(servants))
+	router.GET("/roll/multi", DoMultiRoll(servants))
+
+	router.GET("/servant/:collectionNo", GetServantByCollectionNo(db))
 
 	router.Run(":8080")
 }
