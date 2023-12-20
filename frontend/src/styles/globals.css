@@ -7,6 +7,10 @@
     @apply m-2 rounded-lg border-2 border-blue-400 bg-slate-900 p-2 font-bold text-blue-400 transition-all duration-200 ease-in-out hover:bg-blue-600 hover:text-slate-900;
     box-shadow: 5px 5px #dbb01696;
   }
+
+  body {
+    @apply bg-black;
+  }
 }
 
 @layer utilities {
