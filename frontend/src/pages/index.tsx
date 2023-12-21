@@ -41,7 +41,7 @@ export default function Home() {
         }, order: numOfRolls
       }
       setRolls([roll]);
-      setRollHistory((prev) => [...prev, roll]);
+      // setRollHistory((prev) => [...prev, roll]);
 
       return;
     }
