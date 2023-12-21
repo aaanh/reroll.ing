@@ -37,32 +37,56 @@ def fetch_new_data():
     return json_data
 
 
+def zip_sv_faces():
+    """
+    Zip all servant faces in the local assets folder into sv_faces.zip
+    """
+
+    if os.name == "nt":
+        # Windows
+        os.system("powershell Compress-Archive -Force -Path ./assets -DestinationPath ./sv_faces.zip")
+
+    if os.name == "posix":
+        # Linux
+        os.system("zip -r ./sv_faces.zip ./assets")
+
 def fetch_and_store_sv_faces(sql_data):
+    """
+    Fetch and store all servant faces in the local database from the Atlas Academy API
+    """
+
     start = perf_counter()
 
     for row in sql_data:
         url = f"{row[4]}"
-        r = requests.get(url)
-        with open(f"./assets/{row[0]}.png", "wb") as f:
-            f.write(r.content)
-        print(f"Stored face for ({row[0]}) {row[1]} - {len(r.content)}")
+        if os.path.exists(f"./assets/{row[0]}.png"):
+            print(f"Face for ({row[0]}) {row[1]} already exists, skipping")
+            continue
+        else:
+            r = requests.get(url)
+            with open(f"./assets/{row[0]}.png", "wb") as f:
+                f.write(r.content)
+            print(f"Stored face for ({row[0]}) {row[1]} - {len(r.content)}")
 
     end = perf_counter()
 
     print(f"Downloaded {len(sql_data)} faces in {end - start} seconds")
 
-
 def download_sv_faces():
+    """
+    Download sv_faces.zip from the latest release on GitHub
+    """
+
     if os.path.exists("./sv_faces.zip"):
-        print("sv_faces.zip already exists, skipping download")
-    else:
-        asset_url = requests.get(
-            "https://api.github.com/repos/aaanh/reroll.ing/releases").json()[0]['assets'][0]["browser_download_url"]
-        # print(asset_url)
-        r = requests.get(asset_url)
-        with open("./sv_faces.zip", "wb") as f:
-            f.write(r.content)
-        print(f"Downloaded sv_faces.zip, size: {len(r.content)}")
+        os.remove("./sv_faces.zip")
+
+    asset_url = requests.get(
+        "https://api.github.com/repos/aaanh/reroll.ing/releases").json()[0]['assets'][0]["browser_download_url"]
+    # print(asset_url)
+    r = requests.get(asset_url)
+    with open("./sv_faces.zip", "wb") as f:
+        f.write(r.content)
+    print(f"Downloaded sv_faces.zip, size: {len(r.content)}")
 
     if os.path.exists("./assets"):
         print("assets folder already exists, skipping unzip")
@@ -72,6 +96,10 @@ def download_sv_faces():
 
 
 def update_db(json_data):
+    """
+    Update the SQLite database with the data from the json file
+    """
+
     current_path = os.getcwd()
     for i in range(len(json_data)):
         try:

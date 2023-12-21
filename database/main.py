@@ -15,12 +15,11 @@ def main():
         dd.fetch_and_store_sv_faces(cur.execute(
             'SELECT * FROM servants').fetchall())
 
-    if len(args) == 2 and args[0] == "update" and args[1] == "--faces":
-        dd.fetch_and_store_sv_faces(cur.execute(
-            'SELECT * FROM servants').fetchall())
-
     if len(args) == 1 and args[0] == "download-faces":
         dd.download_sv_faces()
+
+    if len(args) == 1 and args[0] == "zip":
+        dd.zip_sv_faces()
 
     if os.stat("./sv_db.db").st_size == 0:
         dd.init_sql()
