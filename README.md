@@ -37,6 +37,17 @@ Just a simple Nextjs application bootstrapped via `create-t3-app`.
 
 Everything in this domain is done in Python.
 
+### CLI options
+
+These are executed via `python main.py <option>`
+
+- No options, default: Initialize the SQL database and add to it the data from `.json` manifest.
+- `update`: (Housekeeping) Update the `.json` manifest, fetch and store image assets **from the Atlas Academy API**.
+- `download-faces`: (CI/CD) Download the latest image assets from Github release.
+- `zip`: (Housekeeping) Zip the downloaded asset folder into a zip file for release publishing.
+
+### How it works
+
 Servants data is retrieved from [Atlas Academy](https://atlasacademy.io) API. The dataset type is basic with servant names in both EN and JP and includes the servant card face asset URL.
 
 The database contains a reduction of this dataset which only includes the following properties/columns/attributes:
