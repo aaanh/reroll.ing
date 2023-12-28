@@ -55,10 +55,14 @@ def fetch_and_store_sv_faces(sql_data):
     Fetch and store all servant faces in the local database from the Atlas Academy API
     """
 
+    if os.path.exists("./assets") is not True:
+        os.mkdir("./assets")
+
     start = perf_counter()
 
     for row in sql_data:
         url = f"{row[4]}"
+        print(url)
         if os.path.exists(f"./assets/{row[0]}.png"):
             print(f"Face for ({row[0]}) {row[1]} already exists, skipping")
             continue
@@ -104,8 +108,8 @@ def update_db(json_data):
     for i in range(len(json_data)):
         try:
             face_path = f"https://api.reroll.ing/assets/{json_data[i]['collectionNo']}.png"
-            cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face) VALUES (?, ?, ?, ?, ?)",
-                        (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], face_path))
+            cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face_url, face_path) VALUES (?, ?, ?, ?, ?, ?)",
+                        (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['face'], face_path))
         except sqlite3.IntegrityError:
             print(
                 f"Servant already exists in database, skipping: {json_data[i]['collectionNo']} - \"{json_data[i]['name']}\"")

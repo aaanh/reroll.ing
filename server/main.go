@@ -204,10 +204,14 @@ func main() {
 	router.Use(config)
 
 	// Routes
+
+	// Roll actions
 	router.GET("/roll/single", DoSingleRoll(servants))
 	router.GET("/roll/multi", DoMultiRoll(servants))
 
+	// Servant lookup
 	router.GET("/servant/:collectionNo", GetServantByCollectionNo(db))
 
+	// Start the server on port 8080
 	router.Run(":8080")
 }

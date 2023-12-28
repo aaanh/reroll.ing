@@ -12,8 +12,8 @@ def main():
 
     if len(args) == 1 and args[0] == "update":
         dd.update_db(dd.fetch_new_data())
-        dd.fetch_and_store_sv_faces(cur.execute(
-            'SELECT * FROM servants').fetchall())
+        sql_data = cur.execute('SELECT * FROM servants').fetchall()
+        dd.fetch_and_store_sv_faces(sql_data)
 
     if len(args) == 1 and args[0] == "download-faces":
         dd.download_sv_faces()
