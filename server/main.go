@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	_ "fmt"
 	"math/rand"
 	"net/http"
@@ -195,7 +194,7 @@ func main() {
 	for rows.Next() {
 		var servant Servant
 		rows.Scan(&servant.CollectionNo, &servant.Name, &servant.Rarity, &servant.ClassName, &servant.Face, &servant.FacePath)
-		fmt.Print(servant)
+		// fmt.Print(servant)
 		servants = append(servants, servant)
 	}
 
