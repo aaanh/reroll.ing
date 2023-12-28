@@ -1,3 +1,4 @@
 *.db
 assets/
 *.zip
+py_cache/

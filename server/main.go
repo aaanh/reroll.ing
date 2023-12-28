@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	_ "fmt"
 	"math/rand"
 	"net/http"
@@ -23,6 +24,7 @@ type Servant struct {
 	ClassName    string `json:"className"`
 	Rarity       int    `json:"rarity"`
 	Face         string `json:"face"`
+	FacePath     string `json:"face_path"`
 }
 
 func DoSingleRoll(servants []Servant) gin.HandlerFunc {
@@ -151,7 +153,7 @@ func GetServantByCollectionNo(db *sql.DB) gin.HandlerFunc {
 		defer res.Close()
 
 		if res.Next() {
-			if err := res.Scan(&sv.CollectionNo, &sv.Name, &sv.Rarity, &sv.ClassName, &sv.Face); err != nil {
+			if err := res.Scan(&sv.CollectionNo, &sv.Name, &sv.Rarity, &sv.ClassName, &sv.Face, &sv.FacePath); err != nil {
 				// Handle the error
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 				return
@@ -192,7 +194,8 @@ func main() {
 
 	for rows.Next() {
 		var servant Servant
-		rows.Scan(&servant.CollectionNo, &servant.Name, &servant.Rarity, &servant.ClassName, &servant.Face)
+		rows.Scan(&servant.CollectionNo, &servant.Name, &servant.Rarity, &servant.ClassName, &servant.Face, &servant.FacePath)
+		fmt.Print(servant)
 		servants = append(servants, servant)
 	}
 

@@ -12,8 +12,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ['latin'] })
 
-
-
 export default function Home() {
   const SERVER_MODE = process.env.NEXT_PUBLIC_SERVER_MODE
   const API_SERVER = SERVER_MODE == "release" ? process.env.NEXT_PUBLIC_PROD_API_SERVER : process.env.NEXT_PUBLIC_DEV_API_SERVER
@@ -21,7 +19,7 @@ export default function Home() {
   const [numOfRolls, setNumOfRolls] = useState(0);
   const [rolls, setRolls] = useState<Roll[]>([]);
   const [numBatchRolls, setNumBatchRolls] = useState(0);
-  const [rollHistory, setRollHistory] = useState<Roll[]>([]);
+  // const [rollHistory, setRollHistory] = useState<Roll[]>([]);
 
   async function handleRoll(numOfRolls: 1 | 11) {
     if (numOfRolls === 1) {
@@ -37,7 +35,7 @@ export default function Home() {
           sv_name: sv.roll.name,
           sv_class: sv.roll.className,
           sv_rarity: sv.roll.rarity,
-          sv_face: sv.roll.face
+          sv_face: sv.roll.face_path
         }, order: numOfRolls
       }
       setRolls([roll]);
@@ -60,7 +58,7 @@ export default function Home() {
           sv_name: sv.name,
           sv_class: sv.className,
           sv_rarity: sv.rarity,
-          sv_face: sv.face
+          sv_face: sv.face_path
         }, order: idx
       }]))
       return;
