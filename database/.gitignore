@@ -2,3 +2,4 @@
 assets/
 *.zip
 py_cache/
+__pycache__/
