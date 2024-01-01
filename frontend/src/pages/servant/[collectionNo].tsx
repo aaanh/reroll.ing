@@ -35,17 +35,21 @@ export default function Page() {
 
   async function getServantInfo() {
     try {
-      const res = await fetch(`https://api.reroll.ing/servant/${collectionNo}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_MODE == 'release' ? `https://api.reroll.ing/servant/${collectionNo}` : `http://localhost:8080/servant/${collectionNo}`}`);
       if (res.ok) {
         const _sv = await res.json();
         const servant: Servant = {
           collectionNo: _sv.servant.collectionNo,
+          originalName: _sv.servant.originalName,
           name: _sv.servant.name,
           className: _sv.servant.className,
           rarity: _sv.servant.rarity,
+          atkMax: _sv.servant.atkMax,
+          hpMax: _sv.servant.hpMax,
+          attribute: _sv.servant.attribute,
           face: _sv.servant.face_path
         }
-        // console.log(_sv.servant.collectionNo);
+        console.log(_sv.servant);
         return servant;
       } else {
         return null;
@@ -65,7 +69,7 @@ export default function Page() {
         </div>
         <div className='text-center sm:text-left m-4'>
           <h1 className=''>
-            {sv?.name}
+            {sv?.name}{`「${sv?.originalName}」`}
           </h1>
           <h2 className='capitalize text-white/50'>
             {sv?.className}
@@ -80,6 +84,9 @@ export default function Page() {
                         'Unknown'
             }
           </h3>
+          <p>HP Max: {sv?.hpMax}</p>
+          <p>Attack Max: {sv?.atkMax}</p>
+          <p className='capitalize'>Attribute: {sv?.attribute}</p>
         </div>
       </section>
       <div className='flex justify-between space-x-8 p-4'>

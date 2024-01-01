@@ -19,9 +19,13 @@ const OTHER_RATE = 0.2
 // Return list of Servants in JSON format
 type Servant struct {
 	CollectionNo int    `json:"collectionNo"`
+	OriginalName string `json:"originalName"`
 	Name         string `json:"name"`
-	ClassName    string `json:"className"`
 	Rarity       int    `json:"rarity"`
+	ClassName    string `json:"className"`
+	AtkMax       int    `json:"atkMax"`
+	HpMax        int    `json:"hpMax"`
+	Attribute    string `json:"attribute"`
 	Face         string `json:"face"`
 	FacePath     string `json:"face_path"`
 }
@@ -152,7 +156,7 @@ func GetServantByCollectionNo(db *sql.DB) gin.HandlerFunc {
 		defer res.Close()
 
 		if res.Next() {
-			if err := res.Scan(&sv.CollectionNo, &sv.Name, &sv.Rarity, &sv.ClassName, &sv.Face, &sv.FacePath); err != nil {
+			if err := res.Scan(&sv.CollectionNo, &sv.OriginalName, &sv.Name, &sv.Rarity, &sv.ClassName, &sv.AtkMax, &sv.HpMax, &sv.Attribute, &sv.Face, &sv.FacePath); err != nil {
 				// Handle the error
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 				return
@@ -192,10 +196,10 @@ func main() {
 	var servants []Servant
 
 	for rows.Next() {
-		var servant Servant
-		rows.Scan(&servant.CollectionNo, &servant.Name, &servant.Rarity, &servant.ClassName, &servant.Face, &servant.FacePath)
+		var sv Servant
+		rows.Scan(&sv.CollectionNo, &sv.OriginalName, &sv.Name, &sv.Rarity, &sv.ClassName, &sv.AtkMax, &sv.HpMax, &sv.Attribute, &sv.Face, &sv.FacePath)
 		// fmt.Print(servant)
-		servants = append(servants, servant)
+		servants = append(servants, sv)
 	}
 
 	// Create router

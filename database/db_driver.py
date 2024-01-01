@@ -44,11 +44,13 @@ def zip_sv_faces():
 
     if os.name == "nt":
         # Windows
-        os.system("powershell Compress-Archive -Force -Path ./assets -DestinationPath ./sv_faces.zip")
+        os.system(
+            "powershell Compress-Archive -Force -Path ./assets -DestinationPath ./sv_faces.zip")
 
     if os.name == "posix":
         # Linux
         os.system("zip -r ./sv_faces.zip ./assets")
+
 
 def fetch_and_store_sv_faces(sql_data):
     """
@@ -75,6 +77,7 @@ def fetch_and_store_sv_faces(sql_data):
     end = perf_counter()
 
     print(f"Downloaded {len(sql_data)} faces in {end - start} seconds")
+
 
 def download_sv_faces():
     """
@@ -108,8 +111,8 @@ def update_db(json_data):
     for i in range(len(json_data)):
         try:
             face_path = f"https://api.reroll.ing/assets/{json_data[i]['collectionNo']}.png"
-            cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face_url, face_path) VALUES (?, ?, ?, ?, ?, ?)",
-                        (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['face'], face_path))
+            cur.execute("INSERT INTO servants (collectionNo, sv_original_name, sv_name, rarity, class_name, atk_max, hp_max, attribute, face_url, face_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        (json_data[i]['collectionNo'], json_data[i]['originalName'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['atkMax'], json_data[i]['hpMax'], json_data[i]['attribute'], json_data[i]['face'], face_path))
         except sqlite3.IntegrityError:
             print(
                 f"Servant already exists in database, skipping: {json_data[i]['collectionNo']} - \"{json_data[i]['name']}\"")

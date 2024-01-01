@@ -32,9 +32,13 @@ export default function Home() {
       const roll: Roll = {
         servant: {
           collectionNo: sv.roll.collectionNo,
+          originalName: sv.roll.originalName,
           name: sv.roll.name,
           className: sv.roll.className,
           rarity: sv.roll.rarity,
+          atkMax: sv.roll.atkMax,
+          hpMax: sv.roll.hpMax,
+          attribute: sv.roll.attribute,
           face: sv.roll.face_path
         }, order: numOfRolls
       }
@@ -55,9 +59,13 @@ export default function Home() {
       res.rolls.map((sv: any, idx: number) => setRolls(prevRolls => [...prevRolls, {
         servant: {
           collectionNo: sv.collectionNo,
+          originalName: sv.originalName,
           name: sv.name,
           className: sv.className,
           rarity: sv.rarity,
+          atkMax: sv.atkMax,
+          hpMax: sv.hpMax,
+          attribute: sv.attribute,
           face: sv.face_path
         }, order: idx
       }]))

@@ -4,9 +4,13 @@ export enum ServantClass {
 
 export type Servant = {
   collectionNo: number
+  originalName: string
   name: string
   rarity: 5 | 4 | 3 | 2 | 1 | 0
   className: ServantClass
+  atkMax: number
+  hpMax: number
+  attribute: string
   face?: string
 }
 
