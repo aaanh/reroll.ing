@@ -1,5 +1,6 @@
 import { type Roll } from "~/types";
 import Image from "next/image"
+import Link from "next/link";
 
 const RollSlot = ({ roll }: { roll: Roll }) => {
   const mapRarityToFrameColor = (rarity: number): string => {
@@ -32,13 +33,13 @@ const RollSlot = ({ roll }: { roll: Roll }) => {
     }
   }
 
-  return <div className="flex flex-col justify-center items-center m-2">
-    <div className={`relative text-center m-2 rounded-lg h-32 w-32 flex items-center justify-center border-2 p-1`.concat(" ", mapRarityToFrameColor(roll.servant?.sv_rarity ?? 0))}>
-      {roll.servant?.sv_face && <Image sizes="(max-width: 768px) 100vw" alt={roll.servant.sv_name} fill={true} className="h-24 w-24 rounded-xl p-2" src={roll.servant.sv_face}></Image>}
-      <div className="absolute z-10 bg-black capitalize text-sm opacity-75 bottom-0 right-0">{roll.servant?.sv_class}</div>
-      <div className="absolute z-10 bg-black capitalize text-sm opacity-75 top-0 left-0 rounded-full">{mapRarityToText(roll.servant?.sv_rarity ?? 0)}</div>
-    </div>
-    <div className="w-24 h-12 text-center text-sm">{roll.servant?.sv_name}</div>
+  return <div  className="flex flex-col justify-center items-center m-2 group">
+    <Link href={`/servant/${roll.servant?.collectionNo}`} className={`hover:shadow-glow hover:border-blue-500 transition-all ease-in-out duration-300 relative text-center m-2 rounded-lg h-32 w-32 flex items-center justify-center border-2 p-1`.concat(" ", mapRarityToFrameColor(roll.servant?.rarity ?? 0))}>
+      {roll.servant?.face && <Image sizes="(max-width: 768px) 100vw" alt={roll.servant.name} fill={true} className="h-24 w-24 rounded-xl p-2" src={roll.servant.face}></Image>}
+      <div className="absolute z-10 bg-black capitalize text-sm opacity-75 bottom-0 right-0">{roll.servant?.name}</div>
+      <div className="absolute z-10 bg-black capitalize text-sm opacity-75 top-0 left-0 rounded-full">{mapRarityToText(roll.servant?.rarity ?? 0)}</div>
+    </Link>
+    <div className="w-24 h-12 text-center text-sm">{roll.servant?.name}</div>
   </div>
 }
 

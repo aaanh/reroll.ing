@@ -3,11 +3,11 @@ export enum ServantClass {
 }
 
 export type Servant = {
-  sv_collectionId: number
-  sv_name: string
-  sv_rarity: 5 | 4 | 3 | 2 | 1 | 0
-  sv_class: ServantClass
-  sv_face?: string
+  collectionNo: number
+  name: string
+  rarity: 5 | 4 | 3 | 2 | 1 | 0
+  className: ServantClass
+  face?: string
 }
 
 export type Roll = {
