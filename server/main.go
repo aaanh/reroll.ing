@@ -211,6 +211,11 @@ func main() {
 
 	// Routes
 
+	// Health check
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+
 	// Roll actions
 	router.GET("/roll/single", DoSingleRoll(servants))
 	router.GET("/roll/multi", DoMultiRoll(servants))
