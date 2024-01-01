@@ -63,7 +63,7 @@ def fetch_and_store_sv_faces(sql_data):
     start = perf_counter()
 
     for row in sql_data:
-        url = f"{row[4]}"
+        url = f"{row[8]}"
         print(url)
         if os.path.exists(f"./assets/{row[0]}.png"):
             print(f"Face for ({row[0]}) {row[1]} already exists, skipping")

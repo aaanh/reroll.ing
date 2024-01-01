@@ -4,6 +4,8 @@
 
 - `/roll/single`
 - `/roll/multi`
+- `/servant/:collectionNo`
+- `/health`
 
 ## Rate calculations
 
@@ -27,3 +29,36 @@ Example: Chance of getting a particular SSR when pulling an SSR (say you want Ca
 ### Multi
 
 A multi-roll is defined as the collection of 11 independent rolls with the 1st roll has a 100% probability bias to get an SR or SSR. We shall refer to this as the guaranteed roll (GR) to generalize it for permutations. Meaning that the GR can appear at any n-th roll.
+
+## Get One Servant
+
+Single query of one servant by their collection number is done via the endpoint: `/servant/:collectionNo` with `collectionNo` be an integer from 1 to whatever.
+
+Example:
+
+> APi server is listening on localhost.
+
+HTTP Request:
+
+```sh
+curl localhost:8080/servant/1
+```
+
+Response:
+
+```json
+{
+  "servant": {
+    "collectionNo": 1,
+    "originalName": "マシュ・キリエライト",
+    "name": "Mash Kyrielight",
+    "rarity": 3,
+    "className": "shielder",
+    "atkMax": 6791,
+    "hpMax": 10302,
+    "attribute": "earth",
+    "face": "https://static.atlasacademy.io/JP/Faces/f_8001000.png",
+    "face_path": "https://api.reroll.ing/assets/1.png"
+  }
+}
+```
