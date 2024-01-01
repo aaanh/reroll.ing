@@ -91,7 +91,7 @@ export default function Page() {
           <FaHome />
         </Link>
 
-        <Link href={`/servant/${(sv?.collectionNo ?? 1) + 1}`} className={`hover:text-blue-500 transition-all ease-in-out duration-300 ${sv?.collectionNo == 401 ? 'pointer-events-none text-white/20' : ''}`}>
+        <Link href={`/servant/${(sv?.collectionNo ?? 1) + 1}`} className={`hover:text-blue-500 transition-all ease-in-out duration-300 ${sv?.collectionNo == 402 ? 'pointer-events-none text-white/20' : ''}`}>
           <FaArrowRight />
         </Link>
       </div>
