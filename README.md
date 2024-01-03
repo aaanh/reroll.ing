@@ -12,6 +12,11 @@ I, however, hold copyright for the source code and my trade names.
 
 ## Features and TODOs
 
+- [ ] DevOps: Reset/Improve versioning
+  - [ ] Follow semver
+  - [ ] Automate tag generation
+  - [ ] Automate version increment
+  - [ ] Separate versioning for each component
 - [x] Func: Single roll
 - [x] Func: Multi roll
 - [x] FE: Servants card face
