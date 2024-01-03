@@ -20,14 +20,16 @@ I, however, hold copyright for the source code and my trade names.
   - [ ] Symbol
 - [x] FE: Servants rarity indicators
   - [x] Text only
-  - [ ] Symbol
+  - [x] Symbol
 - [ ] FE: Staggered render
+- [x] FE: Servant information page (dynamic routing)
 - [ ] DB: Scheduled data update task
 - [x] DB: Servant images
   - [x] Image retrieval
   - [x] Store to image database
   - [ ] Caching
 - [ ] SV: API rate limiting
+- [ ] DevOps: Automated deployment
 
 ## Frontend/UI
 
@@ -81,10 +83,16 @@ def fetch_new_data():
     return data
 
 def update_db(json_data):
+    """
+    Update the SQLite database with the data from the json file
+    """
+
+    current_path = os.getcwd()
     for i in range(len(json_data)):
         try:
-            cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face) VALUES (?, ?, ?, ?, ?)",
-                        (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['face']))
+            face_path = f"https://api.reroll.ing/assets/{json_data[i]['collectionNo']}.png"
+            cur.execute("INSERT INTO servants (collectionNo, sv_original_name, sv_name, rarity, class_name, atk_max, hp_max, attribute, face_url, face_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        (json_data[i]['collectionNo'], json_data[i]['originalName'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['atkMax'], json_data[i]['hpMax'], json_data[i]['attribute'], json_data[i]['face'], face_path))
         except sqlite3.IntegrityError:
             print(
                 f"Servant already exists in database, skipping: {json_data[i]['collectionNo']} - \"{json_data[i]['name']}\"")
