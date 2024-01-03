@@ -4,11 +4,13 @@
 
 So... I built this full-stack FGO gacha simulator in, what is to me, a record time of 5 days (to be verified with commit history 🤡).
 
-## Notice
+## N.B.
 
 I do not own the characters, names, and attributes that might appear during the usage of this software. Those are the intellectual properties of their respective copyright holders.
 
 I, however, hold copyright for the source code and my trade names.
+
+I'm not affiliated with any entities mentioned or whose resource I use in this project, e.g. FGO and its owner, Atlas Academy, and others, but myself. Nor do I claim to be partnered with, sponsored or funded by the aforementioned.
 
 ## Features and TODOs
 
