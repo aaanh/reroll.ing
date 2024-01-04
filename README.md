@@ -4,14 +4,21 @@
 
 So... I built this full-stack FGO gacha simulator in, what is to me, a record time of 5 days (to be verified with commit history 🤡).
 
-## Notice
+## N.B.
 
 I do not own the characters, names, and attributes that might appear during the usage of this software. Those are the intellectual properties of their respective copyright holders.
 
 I, however, hold copyright for the source code and my trade names.
 
+I'm not affiliated with any entities mentioned or whose resource I use in this project, e.g. FGO and its owner, Atlas Academy, and others, but myself. Nor do I claim to be partnered with, sponsored or funded by the aforementioned.
+
 ## Features and TODOs
 
+- [ ] DevOps: Reset/Improve versioning
+  - [ ] Follow semver
+  - [ ] Automate tag generation
+  - [ ] Automate version increment
+  - [ ] Separate versioning for each component
 - [x] Func: Single roll
 - [x] Func: Multi roll
 - [x] FE: Servants card face
@@ -20,14 +27,16 @@ I, however, hold copyright for the source code and my trade names.
   - [ ] Symbol
 - [x] FE: Servants rarity indicators
   - [x] Text only
-  - [ ] Symbol
+  - [x] Symbol
 - [ ] FE: Staggered render
+- [x] FE: Servant information page (dynamic routing)
 - [ ] DB: Scheduled data update task
 - [x] DB: Servant images
   - [x] Image retrieval
   - [x] Store to image database
   - [ ] Caching
 - [ ] SV: API rate limiting
+- [ ] DevOps: Automated deployment
 
 ## Frontend/UI
 
@@ -81,10 +90,16 @@ def fetch_new_data():
     return data
 
 def update_db(json_data):
+    """
+    Update the SQLite database with the data from the json file
+    """
+
+    current_path = os.getcwd()
     for i in range(len(json_data)):
         try:
-            cur.execute("INSERT INTO servants (collectionNo, sv_name, rarity, class_name, face) VALUES (?, ?, ?, ?, ?)",
-                        (json_data[i]['collectionNo'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['face']))
+            face_path = f"https://api.reroll.ing/assets/{json_data[i]['collectionNo']}.png"
+            cur.execute("INSERT INTO servants (collectionNo, sv_original_name, sv_name, rarity, class_name, atk_max, hp_max, attribute, face_url, face_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        (json_data[i]['collectionNo'], json_data[i]['originalName'], json_data[i]['name'], json_data[i]['rarity'], json_data[i]['className'], json_data[i]['atkMax'], json_data[i]['hpMax'], json_data[i]['attribute'], json_data[i]['face'], face_path))
         except sqlite3.IntegrityError:
             print(
                 f"Servant already exists in database, skipping: {json_data[i]['collectionNo']} - \"{json_data[i]['name']}\"")

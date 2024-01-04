@@ -86,7 +86,7 @@ export default function Home() {
       <main className={`min-h-screen w-full bg-gradient-to-b from-slate-950 to-pink-950/20 justify-between items-center text-slate-200 flex ${inter.className} flex-col`}>
         <Header></Header>
 
-        <div className="flex flex-wrap items-center justify-center h-[50vh] sm:border-none border-y border-blue-500 sm:shadow-none shadow-[inset_0_-5px_20px_rgba(0,0,0,0.3)] sm:overflow-hidden overflow-scroll no-scrollbar">
+        <div className="flex flex-wrap items-center justify-center h-[50vh] sm:h-[55vh] sm:border-none border-y border-blue-500 sm:shadow-none shadow-[inset_0_-5px_20px_rgba(0,0,0,0.3)] sm:overflow-hidden overflow-scroll no-scrollbar">
           {rolls.map((roll: Roll, idx: number) => <RollSlot key={idx} roll={roll}></RollSlot>)}
         </div>
 
