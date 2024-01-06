@@ -14,13 +14,12 @@ I'm not affiliated with any entities mentioned or whose resource I use in this p
 
 ## Features and TODOs
 
-- [ ] DevOps: Reset/Improve versioning
-  - [ ] Follow semver
-  - [ ] Automate tag generation
-  - [ ] Automate version increment
-  - [ ] Separate versioning for each component
+
 - [x] Func: Single roll
 - [x] Func: Multi roll
+
+<hr/>
+
 - [x] FE: Servants card face
 - [ ] FE: Servants class indicators
   - [x] Text only
@@ -30,14 +29,31 @@ I'm not affiliated with any entities mentioned or whose resource I use in this p
   - [x] Symbol
 - [ ] FE: Staggered render
 - [x] FE: Servant information page (dynamic routing)
+
+<hr/>
+
 - [ ] DB: Scheduled data update task
 - [x] DB: Servant images
   - [x] Image retrieval
   - [x] Store to image database
   - [ ] Caching
-- [ ] SV: API rate limiting
-- [ ] DevOps: Automated deployment
 
+<hr/>
+     
+- [ ] SV: API rate limiting
+
+<hr/>
+
+- [ ] DevOps: Automated deployment
+  - [x] Dockerfile for server
+  - [x] Github Actions for server + database
+  - [ ] Deploy to production server
+- [ ] DevOps: Reset/Improve versioning
+  - [ ] Follow semver
+  - [ ] Automate tag generation
+  - [ ] Automate version increment
+  - [ ] Separate versioning for each component
+     
 ## Frontend/UI
 
 Just a simple Nextjs application bootstrapped via `create-t3-app`.
