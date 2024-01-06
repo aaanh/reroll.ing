@@ -47,7 +47,7 @@ jobs:
       - name: Generate SQLite3 database file
         run: |
           cd database
-          pipenv shell && pipenv install && python3 main.py
+          pipenv shell && pipenv install && pipenv run python3 main.py
 
 
       - name: Build and push Docker image
