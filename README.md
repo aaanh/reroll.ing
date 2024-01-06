@@ -67,7 +67,7 @@ Everything in this domain is done in Python.
 These are executed via `python main.py <option>`
 
 - No options, default: Initialize the SQL database and add to it the data from `.json` manifest.
-- `update`: (Housekeeping) Update the `.json` manifest, fetch and store image assets **from the Atlas Academy API**.
+- `full-update`: (Housekeeping) Update the `.json` manifest, fetch and store image assets **from the Atlas Academy API**.
 - `download-faces`: (CI/CD) Download the latest image assets from Github release.
 - `zip`: (Housekeeping) Zip the downloaded asset folder into a zip file for release publishing.
 
