@@ -18,9 +18,13 @@ export default function Home() {
   const [numOfRolls, setNumOfRolls] = useState(0);
   const [rolls, setRolls] = useState<Roll[]>([]);
   const [numBatchRolls, setNumBatchRolls] = useState(0);
+  const [playHalo, setPlayHalo] = useState(false);
   // const [rollHistory, setRollHistory] = useState<Roll[]>([]);
 
   async function handleRoll(numOfRolls: 1 | 11) {
+    setRolls([]);
+    setPlayHalo(false);
+
     if (numOfRolls === 1) {
       // Update the total number of rolls of the current session
       setNumOfRolls((prevNumOfRolls) => prevNumOfRolls + 1);
@@ -53,21 +57,41 @@ export default function Home() {
 
       const res = await fetch(`${API_SERVER}/roll/multi`).then((res) => res.json());
 
-      setRolls([])
+      const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-      res.rolls.map((sv: any, idx: number) => setRolls(prevRolls => [...prevRolls, {
-        servant: {
-          collectionNo: sv.collectionNo,
-          originalName: sv.originalName,
-          name: sv.name,
-          className: sv.className,
-          rarity: sv.rarity,
-          atkMax: sv.atkMax,
-          hpMax: sv.hpMax,
-          attribute: sv.attribute,
-          face: sv.face_path
-        }, order: idx
-      }]))
+      for (let idx = 0; idx < res.rolls.length; idx++) {
+        const sv = res.rolls[idx];
+
+        await delay(300); // Adjust the delay time as needed
+
+        const roll: Roll = {
+          servant: {
+            collectionNo: sv.collectionNo,
+            originalName: sv.originalName,
+            name: sv.name,
+            className: sv.className,
+            rarity: sv.rarity,
+            atkMax: sv.atkMax,
+            hpMax: sv.hpMax,
+            attribute: sv.attribute,
+            face: sv.face_path,
+          },
+          order: idx,
+        };
+
+        // Update the rolls state without wiping it completely
+        setRolls((prevRolls) => [...prevRolls, roll]);
+
+        if (idx > 0 && sv.rarity >= 4) {
+          // Set the playHalo state to trigger the animation
+          setPlayHalo(true);
+
+          // Reset the playHalo state after a delay to allow the animation to complete
+          await delay(1500); // Adjust the delay time according to your animation duration
+          setPlayHalo(false);
+        }
+      }
+
       return;
     }
   }
@@ -82,14 +106,14 @@ export default function Home() {
         <meta property="og:image" content="/logo-color-variant.png"></meta>
         <meta property="og:url" content="https://reroll.ing" />
       </Head>
-      <main className={`min-h-screen w-full bg-gradient-to-b from-slate-950 to-pink-950/20 justify-between items-center text-slate-200 flex ${inter.className} flex-col`}>
+      <main className={`min-h-screen w-full bg-gradient-to-b from-slate-950 to-pink-950/20 justify-between items-center text-slate-200 flex ${inter.className} flex-col ${playHalo ? 'halo-animation' : ''}`}>
         <Header></Header>
 
         <div className="flex flex-wrap items-center justify-center h-[50vh] sm:h-[55vh] sm:border-none border-y border-blue-500 sm:shadow-none shadow-[inset_0_-5px_20px_rgba(0,0,0,0.3)] sm:overflow-hidden overflow-scroll no-scrollbar">
           {rolls.map((roll: Roll, idx: number) => <RollSlot key={idx} roll={roll}></RollSlot>)}
         </div>
 
-        <div className="my-4 flex flex-col items-center">
+        <div className={`my-4 flex flex-col items-center`}>
           <div className="text-center">
             <p><span className="font-bold">Total Rolls:</span> {numOfRolls}</p>
             <p><span className="font-bold">Total Costs:</span> {(numOfRolls - numBatchRolls) * 3} <span className="text-pink-500">SQ</span> ~ {((numOfRolls - numBatchRolls) * 3 * 71.70).toFixed(2)} <span className="text-green-500">¥</span> ~ {((numOfRolls - numBatchRolls) * 3 * 71.70 / 145).toFixed(2)} <span className="text-green-500">US$</span></p>

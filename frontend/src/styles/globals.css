@@ -11,6 +11,29 @@
   body {
     @apply bg-black;
   }
+
+  @keyframes halo {
+    0% {
+      @apply bg-yellow-500/50;
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      @apply bg-blue-400/50;
+      transform: scale(0.9);
+      opacity: 1;
+    }
+    100% {
+      @apply bg-white/50;
+      transform: scale(1);
+      opacity: 0.7;
+    }
+  }
+
+  .halo-animation {
+    @apply rounded-lg;
+    animation: halo 1s ease-in-out; /* Adjust the duration and timing function as needed */
+  }
 }
 
 @layer utilities {
