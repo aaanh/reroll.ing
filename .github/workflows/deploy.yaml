@@ -2,6 +2,9 @@ name: Deploy API server with database
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - server/**
 
 env:
   REGISTRY: ghcr.io
