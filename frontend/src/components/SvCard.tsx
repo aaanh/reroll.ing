@@ -1,10 +1,18 @@
-import Link from "next/link"
 import Image from "next/image"
-import { FaArrowLeft, FaHome, FaArrowRight } from "react-icons/fa"
-import { type Servant } from "~/types"
+import { FaArrowLeft, FaArrowRight, FaWindowClose } from "react-icons/fa"
+import { type Roll } from "~/types"
 
-const SvCard = (sv: Servant) => {
-  return <main>
+interface ISvCardProps {
+  roll: Roll,
+  handleShowSvModal: () => void,
+  setCurrentRollIdx: React.Dispatch<React.SetStateAction<number>>,
+  curRollIdx: number
+}
+
+const SvCard = ({ roll, handleShowSvModal, setCurrentRollIdx, curRollIdx }: ISvCardProps) => {
+  const sv = roll.servant
+
+  return <main className="text-white w-full min-h-screen flex flex-col items-center justify-center">
     <section className='sm:border border-white/50 rounded-lg sm:w-1/3 w-full flex sm:flex-row flex-col sm:relative sm:justify-normal sm:items-start justify-center items-center'>
         <div className='absolute right-2 top-2 rounded-full inline-flex justify-center items-center font-mono text-purple-300 font-bold'>#{sv?.collectionNo}</div>
         <div className='relative h-32 w-32 m-4'>
@@ -33,17 +41,17 @@ const SvCard = (sv: Servant) => {
         </div>
       </section>
       <div className='flex justify-between space-x-8 p-4'>
-        <Link href={`/servant/${(sv?.collectionNo ?? 1) - 1}`} className={`hover:text-blue-500 transition-all ease-in-out duration-300 ${sv?.collectionNo == 1 ? 'pointer-events-none text-white/20' : ''}`}>
+        <button onClick={() => {setCurrentRollIdx(curRollIdx - 1)}} className={`hover:text-blue-500 transition-all ease-in-out duration-300 ${curRollIdx == 0 ? 'pointer-events-none text-white/20' : ''}`}>
           <FaArrowLeft />
-        </Link>
+        </button>
 
-        <Link href={`/`} className={`hover:text-blue-500 transition-all ease-in-out duration-300`}>
-          <FaHome />
-        </Link>
+        <button onClick={handleShowSvModal} className={`hover:text-blue-500 transition-all ease-in-out duration-300`}>
+          <FaWindowClose />
+        </button>
 
-        <Link href={`/servant/${(sv?.collectionNo ?? 1) + 1}`} className={`hover:text-blue-500 transition-all ease-in-out duration-300 ${sv?.collectionNo == 402 ? 'pointer-events-none text-white/20' : ''}`}>
+        <button onClick={() => {setCurrentRollIdx(curRollIdx + 1)}} className={`hover:text-blue-500 transition-all ease-in-out duration-300 ${curRollIdx == 10 ? 'pointer-events-none text-white/20' : ''}`}>
           <FaArrowRight />
-        </Link>
+        </button>
       </div>
   </main>
 }

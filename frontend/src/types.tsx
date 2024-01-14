@@ -12,6 +12,7 @@ export type Servant = {
   hpMax: number
   attribute: string
   face?: string
+  face_path?: string
 }
 
 export type Roll = {
