@@ -48,7 +48,6 @@ const ServantIndexPage = () => {
   };
 
   useEffect(() => {
-    console.log("Fetching data...");
 
     if (servants.length > 0) return;
 
@@ -78,13 +77,13 @@ const ServantIndexPage = () => {
       <h2>Total: {servants.length}</h2>
       <GoToCollectionNo totalSv={totalSv} router={router}></GoToCollectionNo>
       <div className="flex flex-wrap justify-center items-center">
-        {servants.map((sv: Servant, idx: number) => <SvSlot key={idx} sv={sv}></SvSlot>)}
+        {servants.map((sv: Servant, idx: number) => <SvSlot id={sv.collectionNo} key={idx} sv={sv}></SvSlot>)}
       </div>
     </main>
   </>
 }
 
-const SvSlot = ({ sv }: { sv: Servant }) => {
+const SvSlot = ({ sv, id }: { sv: Servant, id: number }) => {
   const mapRarityToFrameColor = (rarity: number): string => {
     switch (rarity) {
       case 5:
@@ -115,7 +114,7 @@ const SvSlot = ({ sv }: { sv: Servant }) => {
     }
   }
 
-  return <div className="flex flex-col justify-center items-center m-2 group">
+  return <div id={id.toString()} className="flex flex-col justify-center items-center m-2 group">
     <a href={`/servants/${sv.collectionNo}`} className={`hover:shadow-glow hover:border-blue-500 transition-all ease-in-out duration-300 relative text-center m-2 rounded-lg h-32 w-32 flex items-center justify-center border-2 p-1`.concat(" ", mapRarityToFrameColor(sv.rarity ?? 0))}>
       {sv.face && <Image sizes="(max-width: 768px) 100vw" alt={sv.name} fill={true} className="h-24 w-24 rounded-xl p-2" src={sv.face}></Image>}
       <div className="absolute z-10 bg-black/50 px-2 capitalize text-sm bottom-1 left-50 rounded-full text-yellow-500">{mapRarityToText(sv.rarity)}</div>
@@ -145,7 +144,7 @@ const GoToCollectionNo = ({ totalSv, router } : { totalSv: number, router: any})
   return <form className="my-2" onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
     <label>
     Collection Number:&nbsp;
-    <input onChange={(e: any) => handleTargetIdChange(e)} value={targetId} className="rounded-lg bg-transparent border text-white p-1" type="number" max={totalSv} min={1} id="targetId"></input>
+    <input onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTargetIdChange(e)} value={targetId} className="rounded-lg bg-transparent border text-white p-1" type="number" max={totalSv} min={1} id="targetId"></input>
     </label>
     &nbsp;
     <input className="bg-blue-700 p-1 rounded-lg" type="submit" value="Jump To"></input>
