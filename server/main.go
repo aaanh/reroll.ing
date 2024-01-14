@@ -215,8 +215,12 @@ func main() {
 	router := gin.Default()
 
 	// CORS
-	config := cors.Default()
-	router.Use(config)
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000", "https://reroll.ing"} // You may want to restrict this to specific origins in production
+	config.AllowMethods = []string{"GET"}
+	config.AllowHeaders = []string{"Origin", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"}
+
+	router.Use(cors.New(config))
 
 	// Routes
 
