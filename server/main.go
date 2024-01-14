@@ -140,6 +140,15 @@ func DoMultiRoll(servants []Servant) gin.HandlerFunc {
 	return gin.HandlerFunc(fn)
 }
 
+func GetAllServants(servants []Servant) gin.HandlerFunc {
+	fn := func(c *gin.Context) {
+		body := map[string][]Servant{"servants": servants}
+		c.JSON(http.StatusOK, body)
+	}
+
+	return gin.HandlerFunc(fn)
+}
+
 func GetServantByCollectionNo(db *sql.DB) gin.HandlerFunc {
 	var sv Servant
 
@@ -221,7 +230,11 @@ func main() {
 	router.GET("/roll/multi", DoMultiRoll(servants))
 
 	// Servant lookup
-	router.GET("/servant/:collectionNo", GetServantByCollectionNo(db))
+	router.GET("/servants/:collectionNo", GetServantByCollectionNo(db))
+	router.GET("/servants", GetAllServants(servants))
+	router.GET("/stats/total_servants", func(c *gin.Context) {
+		c.JSON(http.StatusOK, len(servants))
+	})
 
 	// Start the server on port 8080
 	router.Run(":8080")
