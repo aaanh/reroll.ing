@@ -27,7 +27,7 @@ I'm not affiliated with any entities mentioned or whose resource I use in this p
 - [x] FE: Servants rarity indicators
   - [x] Text only
   - [x] Symbol
-- [ ] FE: Staggered render
+- [x] FE: Staggered render 
 - [x] FE: Servant information page (dynamic routing)
 
 <hr/>
@@ -49,7 +49,7 @@ I'm not affiliated with any entities mentioned or whose resource I use in this p
   - [x] Github Actions for server + database
   - [ ] Deploy to production server
 - [ ] DevOps: Reset/Improve versioning
-  - [ ] Follow semver
+  - [x] Follow semver
   - [ ] Automate tag generation
   - [ ] Automate version increment
   - [ ] Separate versioning for each component
@@ -174,6 +174,13 @@ To handle this case, I simply put it in a loop and add a condition for the first
 Then, I proceeded with the rest of the cases similarly to the single roll.
 
 Now looking back, I also put the 3\* and below servants in their own slice as well, but I don't really need it for the implementation. BUT then I'm too lazy to remove it so... whatever. Probably speed it up by 0.01% (I pulled that number out of thin air, don't quote me on that).
+
+### Other query routes
+
+- GET all servants `/servants`
+- GET servant by collection number `/servants/:collectionNo`
+- GET API server status `/health`
+- GET total number of servants `/stats/total_servants`
 
 ## Deployment
 
