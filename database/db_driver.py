@@ -33,7 +33,6 @@ def fetch_new_data():
     url = "https://api.atlasacademy.io/export/JP/basic_servant_lang_en.json"
     r = requests.get(url)
     json_data = r.json()
-
     return json_data
 
 
