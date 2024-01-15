@@ -7,6 +7,17 @@ import os
 def main():
     args = sys.argv[1:]
 
+    if len(args) == 0: # default no args
+        dd.init_sql()
+        dd.update_db(dd.fetch_new_data())
+        con = sqlite3.connect("sv_db.db")
+        cur = con.cursor()
+        dd.update_db(dd.fetch_new_data())
+        sql_data = cur.execute('SELECT * FROM servants').fetchall()
+        dd.download_sv_faces()
+        con.close()
+
+
     con = sqlite3.connect("sv_db.db")
     cur = con.cursor()
 
@@ -25,10 +36,6 @@ def main():
 
     if len(args) == 1 and args[0] == "zip":
         dd.zip_sv_faces()
-
-    if os.stat("./sv_db.db").st_size == 0:
-        dd.init_sql()
-        dd.update_db(dd.load_json())
 
 
 if __name__ == "__main__":
