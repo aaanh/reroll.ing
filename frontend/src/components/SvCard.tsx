@@ -20,8 +20,11 @@ const SvCard = ({ roll, handleShowSvModal, setCurrentRollIdx, curRollIdx }: ISvC
         </div>
         <div className='text-center sm:text-left m-4'>
           <h1 className=''>
-            {sv?.name}{`「${sv?.originalName}」`}
+            {sv?.name}
           </h1>
+          <h2 className='text-sm'>
+            {`「${sv?.originalName}」`}
+          </h2>
           <h2 className='capitalize text-white/50'>
             {sv?.className}
           </h2>
