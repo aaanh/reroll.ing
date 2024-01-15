@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from "react"
+import { Fragment, useState, type MouseEvent } from "react"
 import About from "./About"
 
 interface ICustomLinkProps {
@@ -42,9 +42,9 @@ const Header = () => {
   return <div className="my-4 text-center">
   <h1 className="font-light text-4xl">Reroll.ing</h1>
   <p>
-    {navLinks.map((link: ICustomLinkProps, idx: number) => <>
-      <CustomLink key={idx} url={link.url} label={link.label}>{link.children ?? null}</CustomLink>&nbsp;|&nbsp;
-    </>
+    {navLinks.map((link: ICustomLinkProps, idx: number) => <Fragment key={idx}>
+      <CustomLink url={link.url} label={link.label}>{link.children ?? null}</CustomLink>&nbsp;|&nbsp;
+    </Fragment>
     )}
     <button className="hover:text-blue-500 underline underline-offset-4" onClick={handleShowAbout}>about</button>
   </p>

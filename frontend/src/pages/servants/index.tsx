@@ -13,6 +13,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { type Servant } from "~/types";
 import Image from "next/image"
+import { FaHome } from "react-icons/fa";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -75,8 +77,13 @@ const ServantIndexPage = () => {
     </Head>
     <main className={`relative min-h-screen w-full bg-gradient-to-b from-slate-950 to-pink-950/20 justify-center items-center text-slate-200 flex ${inter.className} flex-col p-8`}>
       <h1 className="text-4xl">Servant Index</h1>
-      <h2>Total: {servants.length}</h2>
-      <GoToCollectionNo totalSv={totalSv} router={router}></GoToCollectionNo>
+      <Link className="text-white hover:text-blue-500 transition-all ease-in-out my-4" href="/">
+        <FaHome></FaHome>
+      </Link>
+      <div className="flex flex-wrap items-center">
+        Total: {servants.length}&nbsp;|&nbsp;
+        <GoToCollectionNo totalSv={totalSv} router={router}></GoToCollectionNo>
+      </div>
       <div className="flex flex-wrap justify-center items-center">
         {servants.map((sv: Servant, idx: number) => <SvSlot id={sv.collectionNo} key={idx} sv={sv}></SvSlot>)}
       </div>
@@ -143,12 +150,12 @@ const GoToCollectionNo = ({ totalSv, router } : { totalSv: number, router: any})
   }
 
   return <form className="my-2" onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}>
+    <input className="bg-blue-700 p-1 rounded-lg hover:bg-opacity-70 hover:cursor-pointer" type="submit" value="Jump To"></input>&nbsp;
     <label>
-    Collection Number:&nbsp;
+    Collection #&nbsp;
     <input onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTargetIdChange(e)} value={targetId} className="rounded-lg bg-transparent border text-white p-1" type="number" max={totalSv} min={1} id="targetId"></input>
     </label>
     &nbsp;
-    <input className="bg-blue-700 p-1 rounded-lg" type="submit" value="Jump To"></input>
   </form>
 }
 
