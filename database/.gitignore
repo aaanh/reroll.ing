@@ -3,3 +3,5 @@ assets/
 *.zip
 py_cache/
 __pycache__/
+.DS_Store
+*.json
