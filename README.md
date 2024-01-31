@@ -1,8 +1,10 @@
 # [Reroll.ing](https://reroll.ing)
 
-> I bought the domain as a joke and now feel compelled to do something with it.
+The wise words of ThePrimeagen:
 
-So... I built this full-stack FGO gacha simulator in, what is to me, a record time of 5 days (to be verified with commit history 🤡).
+> I have this dumb idea in my head and I will make this thing ~[work]~.
+
+So... I built this full-stack FGO gacha simulator in, what is to me, a record time of 5 days (to reach MVP status).
 
 ## N.B.
 
