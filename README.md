@@ -6,6 +6,8 @@ The wise words of ThePrimeagen:
 
 So... I built this full-stack FGO gacha simulator in, what is to me, a record time of 5 days (to reach MVP status).
 
+Since then, I have iterated over the application like mad to dish out features.
+
 ## N.B.
 
 I do not own the characters, names, and attributes that might appear during the usage of this software. Those are the intellectual properties of their respective copyright holders.
