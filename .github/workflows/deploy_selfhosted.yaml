@@ -1,4 +1,4 @@
-name: Deploy API server with database
+name: Build and deploy on self-hosted runner
 
 on:
   push:
