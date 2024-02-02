@@ -18,7 +18,7 @@ jobs:
       deployments: write
       packages: write
 
-    runs-on: self-hosted
+    runs-on: [self-hosted]
 
     steps:
       - uses: actions/checkout@v2
@@ -42,15 +42,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install database dependencies
-        run: cd database && pip install -r requirements.txt
       - name: Generate SQLite3 database file
         run: |
-          cd database && python3 main.py
+          ./docker-generate-db.sh
 
       - name: Build and push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
