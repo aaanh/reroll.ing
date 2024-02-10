@@ -172,6 +172,7 @@ export default function Home() {
     const reader = new FileReader();
     reader.onload = function () {
       const history = JSON.parse(reader.result as string);
+      localStorage.setItem("rollHistory", JSON.stringify(history));
       setRollHistory(history);
     };
     reader.readAsText(file);
