@@ -36,6 +36,18 @@
     @apply rounded-lg;
     animation: halo 1s ease-in-out; /* Adjust the duration and timing function as needed */
   }
+
+  td {
+    @apply px-6 py-4;
+  }
+
+  tr {
+    @apply bg-slate-900;
+  }
+
+  th {
+    @apply px-6 py-4 text-left text-xs font-bold uppercase text-green-500;
+  }
 }
 
 @layer utilities {

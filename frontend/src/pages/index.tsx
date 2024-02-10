@@ -30,7 +30,9 @@ export default function Home() {
   const [isRolling, setIsRolling] = useState(false);
   const [rollDelay, setRollDelay] = useState(200); // 200 ms
   const [rollHistory, setRollHistory] = useState<RollEvent[]>([]);
-  const [showSessionIO, setShowSessionIO] = useState(false)
+  const [showSessionIO, setShowSessionIO] = useState(false);
+  const [isUploadOk, setIsUploadOk] = useState(false);
+  const [isUploadFailed, setIsUploadFailed] = useState(false);
 
   useEffect(() => {
     setRollDelay(200); // Reset rollDelay to default value after each render
@@ -168,15 +170,21 @@ export default function Home() {
 
   function handleUploadSessionHistory(e: any) {
     e.preventDefault();
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function () {
-      const history = JSON.parse((reader.result as string).replace(/\\/g, ""));
-      localStorage.setItem("rollHistory", JSON.stringify(history));
-      setRollHistory(history);
-    };
-    reader.readAsText(file);
-    setShowSessionIO(false);
+    try {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function () {
+        const history = JSON.parse((reader.result as string).replace(/\\/g, ""));
+        localStorage.setItem("rollHistory", JSON.stringify(history));
+        setRollHistory(history);
+      };
+      reader.readAsText(file);
+      setIsUploadOk(true);
+      setIsUploadFailed(false);
+    } catch (e: any) {
+      setIsUploadOk(false);
+      setIsUploadFailed(true);
+    }
   }
 
   return (
@@ -226,9 +234,11 @@ export default function Home() {
               <p className="group-hover:cursor-pointer">Select Files</p>
             </div>
           </div>
+          <p className={`${isUploadOk ? "" : "hidden"}`}>Loaded session history successfully!</p>
+          <p className={`${isUploadFailed ? "" : "hidden"}`}>Failed to load session history!</p>
 
           <button className="btn-secondary" onClick={() => { if (confirm("Are you sure clearing session history?") == true) { localStorage.setItem("rollHistory", ""); setRollHistory([]); setShowSessionIO(false); setRolls([]); setNumBatchRolls(0); setNumOfRolls(0) } }}>Clear Session History</button>
-          <button className="btn-secondary" onClick={() => setShowSessionIO(false)}>Cancel</button>
+          <button className="btn-secondary" onClick={() => setShowSessionIO(false)}>Close</button>
         </div>
       </main>
     </>
