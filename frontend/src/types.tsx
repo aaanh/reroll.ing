@@ -19,3 +19,8 @@ export type Roll = {
   servant: Servant | undefined
   order: number
 }
+
+export type RollEvent = {
+  type: "single" | "multi"
+  roll: Roll[]
+}

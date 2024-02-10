@@ -8,6 +8,11 @@
     box-shadow: 5px 5px #dbb01696;
   }
 
+  .btn-secondary {
+    @apply m-2 rounded-lg border-2 border-rose-400 bg-slate-900 p-2 font-bold text-rose-400 transition-all duration-200 ease-in-out hover:bg-rose-800 hover:text-slate-900;
+    box-shadow: 5px 5px #b50c5896;
+  }
+
   body {
     @apply bg-black;
   }
