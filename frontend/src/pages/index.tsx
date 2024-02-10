@@ -159,7 +159,7 @@ export default function Home() {
     const dateTime = new Date().toISOString();
     const element = document.createElement("a");
     const history = localStorage.getItem("rollHistory");
-    const file = new Blob([JSON.stringify(history)], { type: 'text/plain' });
+    const file = new Blob(history ? [history] : [], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
     element.download = `rerolling-${dateTime}.json`;
     document.body.appendChild(element); // Required for this to work in FireFox
@@ -171,11 +171,12 @@ export default function Home() {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onload = function () {
-      const history = JSON.parse(reader.result as string);
+      const history = JSON.parse((reader.result as string).replace(/\\/g, ""));
       localStorage.setItem("rollHistory", JSON.stringify(history));
       setRollHistory(history);
     };
     reader.readAsText(file);
+    setShowSessionIO(false);
   }
 
   return (
