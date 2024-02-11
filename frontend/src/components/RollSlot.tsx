@@ -1,6 +1,5 @@
 import { type Roll } from "~/types";
 import Image from "next/image"
-import Link from "next/link";
 
 const RollSlot = ({ roll, handleShowSvInfoModal, currRollIdx }: { roll: Roll, handleShowSvInfoModal: (idx: number) => void, currRollIdx: number }) => {
   const mapRarityToFrameColor = (rarity: number): string => {
@@ -22,7 +21,7 @@ const RollSlot = ({ roll, handleShowSvInfoModal, currRollIdx }: { roll: Roll, ha
   };
 
   const mapRarityToText = (rarity: number): string => {
-    switch(rarity) {
+    switch (rarity) {
       case 5: return "★★★★★"
       case 4: return "★★★★"
       case 3: return "★★★"

@@ -3,7 +3,7 @@ import Head from "next/head"
 import Header from "~/components/Header"
 import React, { useEffect, useState } from 'react';
 import type { RollEvent } from "~/types";
-import { Legend, Pie, PieChart, ResponsiveContainer, Text, Tooltip } from "recharts";
+import { Legend, Pie, PieChart, Tooltip } from "recharts";
 import Image from "next/image";
 
 const inter = Inter({ subsets: ['latin'] })
@@ -14,6 +14,10 @@ const Stats = () => {
   const [numMultiRolls, setNumMultiRolls] = useState(0);
   const [numOfSR, setNumOfSR] = useState(0);
   const [numOfSSR, setNumOfSSR] = useState(0);
+
+  const [jpyToUsd, setJpyToUsd] = useState(0);
+  const [jpyToCad, setJpyToCad] = useState(0);
+  const [forexDate, setForexDate] = useState("");
 
   useEffect(() => {
     const history = localStorage.getItem("rollHistory")
@@ -40,10 +44,27 @@ const Stats = () => {
       setNumOfSSR(numOfSSR)
 
       setRollHistory(parsed)
+
+      // Exchange rates
+      void getExchangeRates()
+
     } catch (error: unknown) {
       console.log(error)
     }
   }, [])
+
+  async function getExchangeRates() {
+    const responseJpyToUsd = await fetch("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/jpy/usd.json")
+    const responseJpyToCad = await fetch("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/jpy/cad.json")
+    const dataJpyToUsd = await responseJpyToUsd.json() as { date: string, usd: number }
+    const dataJpyToCad = await responseJpyToCad.json() as { date: string, cad: number }
+    const rateJpyToUsd = dataJpyToUsd as { usd: number }
+    const rateJpyToCad = dataJpyToCad as { cad: number }
+    const forexDate = dataJpyToUsd.date
+    setJpyToUsd(rateJpyToUsd.usd)
+    setJpyToCad(rateJpyToCad.cad)
+    setForexDate(forexDate)
+  }
 
   return <>
     <Head>
@@ -154,26 +175,27 @@ const Stats = () => {
                   <td className="font-mono">{(numSingleRolls * 3 + numMultiRolls * 30 / numOfSSR)}</td>
                 </tr>
                 <tr>
-                  <td className="font-mono">Yen (¥)</td>
+                  <td className="font-mono">¥en</td>
                   <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70).toFixed(2)}</td>
                   <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / numOfSR).toFixed(2)}</td>
                   <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / numOfSSR).toFixed(2)}</td>
                 </tr>
                 <tr>
-                  <td className="font-mono">US Dollars</td>
-                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / 145).toFixed(2)}</td>
-                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / 145 / numOfSR).toFixed(2)}</td>
-                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / 145 / numOfSSR).toFixed(2)}</td>
+                  <td className="font-mono">US$</td>
+                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 * jpyToUsd).toFixed(2)}</td>
+                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 * jpyToUsd / numOfSR).toFixed(2)}</td>
+                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 * jpyToUsd / numOfSSR).toFixed(2)}</td>
                 </tr>
                 <tr>
-                  <td className="font-mono">Canada Monopoly Money</td>
-                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / 145 * 1.35).toFixed(2)}</td>
-                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / 145 * 1.35 / numOfSR).toFixed(2)}</td>
-                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / 145 * 1.35 / numOfSSR).toFixed(2)}</td>
+                  <td className="font-mono">CA$</td>
+                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 * jpyToCad).toFixed(2)}</td>
+                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 * jpyToCad / numOfSR).toFixed(2)}</td>
+                  <td className="font-mono">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 * jpyToCad / numOfSSR).toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
-            <p className="text-sm mt-2">Assume best JP SQ pack: 1 sq = 71.70 ¥, 1 US$ = 145 ¥, 1 US$ = 1.35 CA$</p>
+            <p className="text-sm mt-2">Assume best JP SQ pack: 1 sq = 71.70 ¥, US$ 1 = {(1 / jpyToUsd).toFixed(2)} ¥, CA$ 1 = {(1 / jpyToCad).toFixed(2)} ¥</p>
+            <p className="text-sm mt-2">Forex Rates as of {forexDate}.</p>
           </div>
         </div>
 
