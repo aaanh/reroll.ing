@@ -57,6 +57,35 @@ const Stats = () => {
       <Header></Header>
       {/* <h1 className="text-4xl">🚧 Under Construction</h1> */}
       <section className="p-4 h-full flex w-full justify-center items-center flex-col space-y-8">
+        <div className="border rounded-xl">
+          {/* values: [numOfSR, numOfSSR, numMultiRolls * 11 + numSingleRolls - numOfSR - numOfSSR], */}
+
+          <h2 className="text-2xl mb-2 text-center">Rarity Distribution</h2>
+          <PieChart
+            width={300}
+            height={300}
+          >
+            <Pie
+              dataKey="value"
+              isAnimationActive={true}
+              data={[
+                { name: '★★★★★', value: numOfSSR, fill: '#FFD700' },
+                { name: '★★★★', value: numOfSR, fill: '#42f58a' },
+                { name: 'Other', value: numMultiRolls * 11 + numSingleRolls - numOfSR - numOfSSR, fill: '#1497e3' }
+              ]}
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              label
+              innerRadius={40}
+              height={400}
+              width={400}
+              className="outline-none"
+            ></Pie>
+            <Legend></Legend>
+            <Tooltip></Tooltip>
+          </PieChart>
+        </div>
         <div className="flex md:space-x-4 flex-wrap justify-center space-y-4 md:space-y-0">
           {/* ROLLS */}
           <div className="text-center">
@@ -156,35 +185,7 @@ const Stats = () => {
           <p className="mt-2">{`According to Artoria's Börgar Index, your spending could have bought:`} <span className="text-yellow-500 font-bold">{((numSingleRolls * 3 + numMultiRolls * 30) * 71.70 / 145 / 5.58).toFixed(2)}</span> börgars in the Freedom state.</p>
         </div>
 
-        <div className="border rounded-xl">
-          {/* values: [numOfSR, numOfSSR, numMultiRolls * 11 + numSingleRolls - numOfSR - numOfSSR], */}
 
-          <h2 className="text-2xl mb-2 text-center">Rarity Distribution</h2>
-          <PieChart
-            width={300}
-            height={300}
-          >
-            <Pie
-              dataKey="value"
-              isAnimationActive={true}
-              data={[
-                { name: '★★★★★', value: numOfSSR, fill: '#FFD700' },
-                { name: '★★★★', value: numOfSR, fill: '#42f58a' },
-                { name: 'Other', value: numMultiRolls * 11 + numSingleRolls - numOfSR - numOfSSR, fill: '#1497e3' }
-              ]}
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              label
-              innerRadius={40}
-              height={400}
-              width={400}
-              className="outline-none"
-            ></Pie>
-            <Legend></Legend>
-            <Tooltip></Tooltip>
-          </PieChart>
-        </div>
       </section>
     </main>
   </>
