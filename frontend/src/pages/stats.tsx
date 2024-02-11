@@ -171,8 +171,8 @@ const Stats = () => {
                 <tr>
                   <td className="font-mono">Saint Quartz</td>
                   <td className="font-mono">{(numSingleRolls * 3 + numMultiRolls * 30)}</td>
-                  <td className="font-mono">{(numSingleRolls * 3 + numMultiRolls * 30 / numOfSR)}</td>
-                  <td className="font-mono">{(numSingleRolls * 3 + numMultiRolls * 30 / numOfSSR)}</td>
+                  <td className="font-mono">{(numSingleRolls * 3 + numMultiRolls * 30 / numOfSR).toFixed(2)}</td>
+                  <td className="font-mono">{(numSingleRolls * 3 + numMultiRolls * 30 / numOfSSR).toFixed(2)}</td>
                 </tr>
                 <tr>
                   <td className="font-mono">¥en</td>
