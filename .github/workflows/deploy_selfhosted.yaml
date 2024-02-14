@@ -1,10 +1,6 @@
 name: Build and deploy on self-hosted runner
 
 on:
-  push:
-    paths:
-      - "server/**"
-      - "database/**"
   workflow_dispatch:
 
 env:
