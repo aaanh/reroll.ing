@@ -9,11 +9,16 @@ const RollHistory = ({ history }: RollHistory) => {
   return (
     <>
       {history.reverse().map((rollEvent: RollEvent, idx: number) => (
-        <section key={history.length - idx} className="flex flex-col sm:w-1/2">
+        <section
+          key={history.length - idx}
+          className={`flex flex-col ${
+            rollEvent.type === "multi" ? "md:w-1/2" : ""
+          }`}
+        >
           <h3 className="text-yellow-500 font-bold text-center">
             Roll #{history.length - idx} &mdash; {rollEvent.type}
           </h3>
-          <div className="flex flex-wrap items-center justify-center">
+          <div className={`flex flex-wrap items-center justify-center`}>
             {rollEvent.roll.map((r: Roll, idx: number) => (
               <SvSlot
                 sv={{

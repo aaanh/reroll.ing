@@ -311,9 +311,11 @@ const Stats = () => {
           <div className="flex flex-col items-center">
             <HistoryCtx.Provider value={rollHistory}>
               <h2 className="font-bold text-green-500 text-2xl">
-                Full Roll History
+                Roll History
               </h2>
-              <RollHistory history={rollHistory}></RollHistory>
+              <div className="flex flex-wrap">
+                <RollHistory history={rollHistory}></RollHistory>
+              </div>
             </HistoryCtx.Provider>
           </div>
         </section>
