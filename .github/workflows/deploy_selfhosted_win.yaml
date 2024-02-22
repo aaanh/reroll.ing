@@ -1,4 +1,4 @@
-name: Build and deploy on self-hosted runner
+name: Build and deploy on self-hosted Windows runner
 
 on:
   workflow_dispatch:
