@@ -11,13 +11,16 @@ const inter = Inter({ subsets: ["latin"] });
 
 const Stats = () => {
   const [rollHistory, setRollHistory] = useState<RollEvent[]>([]);
+
   const [numSingleRolls, setNumSingleRolls] = useState(0);
   const [numMultiRolls, setNumMultiRolls] = useState(0);
+
   const [numOfSR, setNumOfSR] = useState(0);
   const [numOfSSR, setNumOfSSR] = useState(0);
 
   const [jpyToUsd, setJpyToUsd] = useState(0);
   const [jpyToCad, setJpyToCad] = useState(0);
+
   const [forexDate, setForexDate] = useState("");
 
   const HistoryCtx = createContext(rollHistory);

@@ -171,6 +171,12 @@ export const SvSlot = ({ sv, id }: { sv: Servant; id: number }) => {
   );
 };
 
+const ServantFilterTab = () => {
+  const filterQueries = [""];
+
+  return <div></div>;
+};
+
 const GoToCollectionNo = ({
   totalSv,
   router,
