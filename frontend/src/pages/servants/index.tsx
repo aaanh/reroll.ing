@@ -1,15 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
 import Head from "next/head";
 import { Inter } from "next/font/google";
-import { useRouter } from "next/router";
+import { type NextRouter, useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { type Servant } from "~/types";
 import Image from "next/image";
@@ -31,8 +24,8 @@ const ServantIndexPage = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`${API_SERVER}/servants`).then((res) =>
-        res.json(),
+      const res = await fetch(`${API_SERVER}/servants`).then(
+        (res) => res.json() as unknown as { servants: Servant[] },
       );
       if (res.servants) {
         res.servants.forEach((sv: Servant) => {
@@ -60,7 +53,7 @@ const ServantIndexPage = () => {
 
     async function getNumOfServants() {
       const res = await fetch(`${API_SERVER}/stats/total_servants`);
-      const num: number = await res.json();
+      const num = (await res.json()) as unknown as number;
 
       setTotalSv(num);
     }
@@ -183,7 +176,7 @@ const GoToCollectionNo = ({
   router,
 }: {
   totalSv: number;
-  router: any;
+  router: NextRouter;
 }) => {
   const [targetId, setTargetId] = useState(1);
 
@@ -194,7 +187,7 @@ const GoToCollectionNo = ({
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    router.push(`#${targetId}`);
+    void router.push(`#${targetId}`);
   }
 
   return (

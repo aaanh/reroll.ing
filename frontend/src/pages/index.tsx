@@ -3,7 +3,13 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
-import type { Servant, Roll, RollEvent } from "~/types";
+import type {
+  Servant,
+  Roll,
+  RollEvent,
+  RollSingleResponse,
+  RollMultiResponse,
+} from "~/types";
 import RollSlot from "~/components/RollSlot";
 import Header from "~/components/Header";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -84,8 +90,8 @@ export default function Home() {
       setNumOfRolls((prevNumOfRolls) => prevNumOfRolls + 1);
 
       // Calling the API server for a single roll
-      const sv = await fetch(`${API_SERVER}/roll/single`).then((res) =>
-        res.json(),
+      const sv = await fetch(`${API_SERVER}/roll/single`).then(
+        (res) => res.json() as unknown as RollSingleResponse,
       );
 
       const roll: Roll = {
@@ -106,7 +112,7 @@ export default function Home() {
       setRolls([roll]);
       tempRolls.push(roll);
 
-      if (sv.rarity >= 4) {
+      if (sv.roll.rarity >= 4) {
         // Set the playHalo state to trigger the animation
         setPlayHalo(true);
 
@@ -128,8 +134,8 @@ export default function Home() {
       setNumOfRolls((prevNumOfRolls) => prevNumOfRolls + 11);
       setNumBatchRolls((prevNumBatchRolls) => prevNumBatchRolls + 1);
 
-      const res = await fetch(`${API_SERVER}/roll/multi`).then((res) =>
-        res.json(),
+      const res = await fetch(`${API_SERVER}/roll/multi`).then(
+        (res) => res.json() as unknown as RollMultiResponse,
       );
 
       await Promise.all(
@@ -186,22 +192,24 @@ export default function Home() {
     element.click();
   }
 
-  function handleUploadSessionHistory(e: any) {
+  function handleUploadSessionHistory(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     try {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function () {
-        const history = JSON.parse(
-          (reader.result as string).replace(/\\/g, ""),
-        );
-        localStorage.setItem("rollHistory", JSON.stringify(history));
-        setRollHistory(history);
-      };
-      reader.readAsText(file);
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function () {
+          const history = JSON.parse(
+            (reader.result as string).replace(/\\/g, ""),
+          ) as RollEvent[]; // Explicitly type the result as RollEvent[]
+          localStorage.setItem("rollHistory", JSON.stringify(history));
+          setRollHistory(history);
+        };
+        reader.readAsText(file);
+      }
       setIsUploadOk(true);
       setIsUploadFailed(false);
-    } catch (e: any) {
+    } catch (e: unknown) {
       setIsUploadOk(false);
       setIsUploadFailed(true);
     }
