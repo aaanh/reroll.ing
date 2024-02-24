@@ -1,11 +1,5 @@
 "use client";
-/* eslint-disable @typescript-eslint/non-nullable-type-assertion-style */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
@@ -46,7 +40,7 @@ export default function Home() {
       try {
         const parsed = history ? (JSON.parse(history) as RollEvent[]) : [];
         setRollHistory(parsed);
-      } catch (error: any) {
+      } catch (error) {
         console.log(error);
       }
     }
@@ -59,7 +53,6 @@ export default function Home() {
 
   function updateRollHistoryOnLocalStorage(type: 1 | 11, rolls: Roll[]) {
     try {
-      // const currentHistory = JSON.parse(localStorage.getItem("rollHistory") ?? "[]") as RollEvent[];
       localStorage.setItem(
         "rollHistory",
         JSON.stringify(
@@ -69,7 +62,7 @@ export default function Home() {
           }),
         ),
       );
-    } catch (e: any) {
+    } catch (error) {
       return;
     }
   }
