@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import Header from "~/components/Header";
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { RollEvent } from "~/types";
 import { Legend, Pie, PieChart, Tooltip } from "recharts";
 import Image from "next/image";
@@ -19,8 +19,6 @@ const Stats = () => {
   const [jpyToUsd, setJpyToUsd] = useState(0);
   const [jpyToCad, setJpyToCad] = useState(0);
   const [forexDate, setForexDate] = useState("");
-
-  const HistoryCtx = createContext(rollHistory);
 
   useEffect(() => {
     const history = localStorage.getItem("rollHistory");
@@ -56,25 +54,18 @@ const Stats = () => {
   }, []);
 
   async function getExchangeRates() {
-    const responseJpyToUsd = await fetch(
-      "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/jpy/usd.json",
-    );
-    const responseJpyToCad = await fetch(
-      "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/jpy/cad.json",
-    );
-    const dataJpyToUsd = (await responseJpyToUsd.json()) as {
-      date: string;
-      usd: number;
-    };
-    const dataJpyToCad = (await responseJpyToCad.json()) as {
-      date: string;
-      cad: number;
-    };
-    const rateJpyToUsd = dataJpyToUsd as { usd: number };
-    const rateJpyToCad = dataJpyToCad as { cad: number };
-    const forexDate = dataJpyToUsd.date;
-    setJpyToUsd(rateJpyToUsd.usd);
-    setJpyToCad(rateJpyToCad.cad);
+    const baseJpyExchangeJson = (await (
+      await fetch(
+        "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/jpy.json",
+      )
+    ).json()) as { date: string; jpy: { usd: number; cad: number } };
+
+    const rateJpyToCad = baseJpyExchangeJson.jpy.cad;
+    const rateJpyToUsd = baseJpyExchangeJson.jpy.usd;
+    const forexDate = baseJpyExchangeJson.date;
+
+    setJpyToUsd(rateJpyToUsd);
+    setJpyToCad(rateJpyToCad);
     setForexDate(forexDate);
   }
 
@@ -309,14 +300,10 @@ const Stats = () => {
           </div>
 
           <div className="flex flex-col items-center">
-            <HistoryCtx.Provider value={rollHistory}>
-              <h2 className="font-bold text-green-500 text-2xl">
-                Roll History
-              </h2>
-              <div className="flex flex-wrap">
-                <RollHistory history={rollHistory}></RollHistory>
-              </div>
-            </HistoryCtx.Provider>
+            <h2 className="font-bold text-green-500 text-2xl">Roll History</h2>
+            <div className="flex flex-wrap">
+              <RollHistory history={rollHistory}></RollHistory>
+            </div>
           </div>
         </section>
       </main>
