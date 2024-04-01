@@ -37,6 +37,19 @@ export default function Home() {
   const [isUploadOk, setIsUploadOk] = useState(false);
   const [isUploadFailed, setIsUploadFailed] = useState(false);
 
+  const [isServerUp, setIsServerUp] = useState(false);
+
+  async function checkServerStatus() {
+    const res = (await fetch(`${API_SERVER}/health`).then((res) =>
+      res.json(),
+    )) as { status: string };
+    if (res.status === "ok") {
+      setIsServerUp(true);
+    } else {
+      setIsServerUp(false);
+    }
+  }
+
   useEffect(() => {
     setRollDelay(200); // Reset rollDelay to default value after each render
     if (localStorage.getItem("rollHistory") === null) {
@@ -50,6 +63,8 @@ export default function Home() {
         console.log(error);
       }
     }
+
+    void checkServerStatus();
   }, [rollDelay]);
 
   function handleShowSvInfoModal(curRollIdx: number) {
@@ -232,7 +247,9 @@ export default function Home() {
           inter.className
         } flex-col`}
       >
-        <Header></Header>
+        <Header>
+          {isServerUp ? "Server: 🟢 Available" : "Server: 🔴 Down"}
+        </Header>
 
         {showSvInfoModal ? (
           <SvModal
@@ -241,6 +258,23 @@ export default function Home() {
             curRollIdx={currentRollIdx}
             rolls={rolls}
           ></SvModal>
+        ) : null}
+
+        {!isServerUp ? (
+          <div className="absolute z-50 h-screen w-screen bg-black/50 flex items-center justify-center">
+            <div className="bg-black p-8">
+              <h1 className="font-bold text-yellow-500">
+                API Server is currently under maintenance.
+              </h1>
+              <p>Sorry for the inconveniences. Please check back later.</p>
+              <p>
+                {`If it's still down after 1-2 hours, contact `}
+                <a className="link" href="mailto:support@aaanh.com">
+                  support@aaanh.com
+                </a>
+              </p>
+            </div>
+          </div>
         ) : null}
 
         <div
