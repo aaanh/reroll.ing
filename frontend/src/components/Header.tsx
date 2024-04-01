@@ -56,6 +56,7 @@ const Header = ({ children }: { children: React.ReactNode }) => {
       <h1 className="font-light text-4xl rounded-xl border-2 py-1 hover:border-green-500 hover:text-green-500 transition-all ease-in-out min-w-56">
         <Link href="/">Reroll.ing</Link>
       </h1>
+      {children}
       {!navIsOpen ? (
         <button
           onClick={() => setNavIsOpen(true)}
@@ -92,7 +93,6 @@ const Header = ({ children }: { children: React.ReactNode }) => {
         </>
       )}
       <About setShow={handleShowAbout} show={showAbout}></About>
-      {children}
     </div>
   );
 };
