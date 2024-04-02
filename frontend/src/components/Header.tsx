@@ -17,7 +17,7 @@ const CustomLink = ({ url, label, children }: ICustomLinkProps) => {
   );
 };
 
-const Header = ({ children }: { children: React.ReactNode }) => {
+const Header = ({ children }: { children?: React.ReactNode }) => {
   const [showAbout, setShowAbout] = useState(false);
 
   function handleShowAbout(e: MouseEvent<HTMLButtonElement>) {
