@@ -191,6 +191,8 @@ Now looking back, I also put the 3\* and below servants in their own slice as we
 - Frontend -> Vercel
 - Database + Server -> baremetal Linux VPS
 
+### As a process on baremetal
+
 To deploy, the following steps I took were:
 
 Get the API server running and listening on `localhost:8080`
@@ -204,6 +206,11 @@ Get the API server running and listening on `localhost:8080`
 7. Start `tmux`
 8. Run the server `./server`
 
+### As Docker container on baremetal
+
+1. Install Docker on the Linux server \[ [Debian](https://docs.docker.com/engine/install/debian/) | [RHEL](https://docs.docker.com/engine/install/rhel/) \]
+2. Run `docker run -dp 8080:8080 ghcr.io/aaanh/reroll.ing/server:latest` [or the versions you need](https://github.com/aaanh/reroll.ing/pkgs/container/reroll.ing%2Fserver)
+
 Networking
 
 1. Add the server's static IP to DNS A record on Cloudflare
@@ -212,11 +219,71 @@ Networking
 
    ```nginx
     server {
-      server_name _;  // catch all
-
-      location / {
-        proxy_pass http://localhost:8080
-      }
+    
+            if ($host != api.reroll.ing) {
+                    return 444;
+            }
+    
+            # Add index.php to the list if you are using PHP
+            # index index.html index.htm index.nginx-debian.html;
+    
+            server_name _ api.reroll.ing;
+    
+            location / {
+                    root    /var/www/html;
+                    index   index.html index.htm;
+            }
+    
+            location /health {
+                    proxy_pass http://localhost:8080;
+            }
+    
+            location /roll/ {
+                    proxy_pass http://localhost:8080;
+            }
+    
+            location /stats/total_servants {
+                    proxy_pass http://localhost:8080;
+            }
+    
+            location /servants {
+                    proxy_pass http://localhost:8080;
+            }
+    
+            location /servants/ {
+                    proxy_pass http://localhost:8080;
+            }
+    
+            location /assets/ {
+                    alias /var/www/reroll.ing/assets/;
+            }
+    
+    
+        listen [::]:443 ssl http2;
+        listen 443 ssl http2;
+        ssl_certificate /etc/ssl/cert.pem;
+        ssl_certificate_key /etc/ssl/key.pem;
+        ssl_client_certificate /etc/ssl/cloudflare.crt;
+        ssl_verify_client off;
+    }
+    
+    
+    server {
+    
+            if ($host != api.reroll.ing) {
+                    return 444;
+            }
+    
+        if ($host = api.reroll.ing) {
+            return 301 https://$host$request_uri;
+        } # managed by Certbot
+    
+    
+            listen 80 default_server;
+            listen [::]:80 default_server;
+    
+            server_name api.reroll.ing;
+            return 404; # managed by Certbot
     }
    ```
 
